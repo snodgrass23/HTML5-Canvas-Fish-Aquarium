@@ -21,10 +21,19 @@
 			for (var x = 0; x < 5; x++) {
 				for (var y = 0; y < 3; y++) {
 					var fish = new Fish(50 + 200 * x, 50 + 150 * y, 100, 100);
-					fish.prepare();
-					fish.render(view.ctx);
 				}
 			}
+			
+			var frame = 0;
+			function main() {
+				frame = (frame + 1) % Fish.frames;
+				sea.render(view.ctx);
+				for (var i in Fish.all) {
+					Fish.all[i].render(view.ctx, frame);
+				}
+			}
+			
+			setInterval(main, 1000 / 77);
 
 		</script>
 
