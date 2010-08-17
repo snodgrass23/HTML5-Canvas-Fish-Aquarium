@@ -7,16 +7,20 @@
     
 		<canvas id="view" width="1000" height="500"></canvas>
 		
-		<script type="text/javascript" src="jim.js"></script>
+        <script type="text/javascript" src="jim.js"></script>
 		<script type="text/javascript" src="hunter.js"></script>
 
 		<script type="text/javascript">
 
 			var view = new View('view');
+            
 			var sea = new Sea(view.canvas.width, view.canvas.height);
-			
 			sea.prepare();
 			sea.render(view.ctx);
+            
+            var aquarium = new Aquarium(view.canvas.width, view.canvas.height);
+            aquarium.prepare();
+			aquarium.render(view.ctx);
 			
 			for (var x = 0; x < 5; x++) {
 				for (var y = 0; y < 3; y++) {
