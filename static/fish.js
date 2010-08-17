@@ -131,6 +131,8 @@ Fish.prototype.prepare = function() {
 	// Color/shading overlay!
 	
 	//var grad = ctx.createLinearGradient(0.5 * c.width, 0, 0.5 * c.width, c.height);
+
+
 	var grad = [];
 
 	grad[0] = ctx.createRadialGradient(
@@ -195,7 +197,7 @@ Fish.prototype.prepare = function() {
 	ctx.fillRect(0, 0, c.width, c.height);
 	ctx.globalAlpha = 1;
 	
-	
+
 	// Draw the fins
 	ctx.globalCompositeOperation = 'destination-over';
 	for (var i = ~~rand(0, 5); i > 0; i--) {
