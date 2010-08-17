@@ -31,28 +31,17 @@ function Fish(x, y, w, h) {
 	this.canvas.height = h;
 }
 Fish.prototype._add_fin = function(c, ctx, w) {
-	console.log("_add_fin");
 	var f = {
 		s: c.width - w * rand(.1, .3),		// Start point
 		y: c.height * rand(0, 1),		// direction / multiplier
 		l: w * rand(.2, .5)		// Length of each point
 	};
 	
-	for (var k in f) {
-		console.log("f(" + k + ") = " + f[k]);
-	}
-	
 	var grad = ctx.createLinearGradient(0.5 * c.width, 0, 0.5 * c.width, c.height);
-	/*
-	grad.addColorStop(0, '#ffcc00');
-	grad.addColorStop(.25, '#e69800');
-	grad.addColorStop(.8, '#a25923')
-	*/
 	grad.addColorStop(0, 'rgba(255,255,255,.25)');
 	grad.addColorStop(.5, 'rgba(255,255,255,.1)');
 	grad.addColorStop(1, 'rgba(255,255,255,.5)');
 	ctx.fillStyle = grad;
-	//ctx.fillStyle = 'rgba(255, 255, 255, .3)';
 	ctx.beginPath();
 	ctx.moveTo(f.s, c.height * .5);
 	ctx.quadraticCurveTo(
@@ -71,8 +60,6 @@ Fish.prototype._draw_scales = function(canvas, target_ctx) {
 	c.width = canvas.width;
 	c.height = canvas.height;
 	
-	
-
 	var scale_size = 11;
 	ctx.strokeStyle = '#000';
 	for (var x = 0; x < c.width * 2 / scale_size; x += 1) {
@@ -83,17 +70,13 @@ Fish.prototype._draw_scales = function(canvas, target_ctx) {
 				scale_size * .5 - 1
 			);
 			glow(ctx, 3, '#000');		
-			var opacity = (1 - (Math.abs((y * scale_size) - c.height * .5) / (c.height * .5)) * 1.15);
-			opacity *= (1 - Math.abs((x * scale_size * .5) - c.width * .6) / (c.width * .7) * 1.15);
+			var opacity = (1 - (Math.abs((y * scale_size) - c.height * .5) / (c.height * .5)) * 1.25);
+			opacity *= (1 - Math.abs((x * scale_size * .5) - c.width * .6) / (c.width * .7)) * 1.25;
 			ctx.fillStyle = 'rgba(255,255,255,' + opacity + ')';
-			console.log('fillstyle = ' + ctx.fillStyle);
 			ctx.fill();
 			
 		}
 	}
-	
-	//ctx.fillStyle = 'rgba(255, 0, 0, 1)';
-	//ctx.fillRect(0, 0, c.width, c.height);
 
 	target_ctx.globalCompositeOperation = 'source-atop';
 	target_ctx.drawImage(c, 0, 0, c.width, c.height);
@@ -147,21 +130,71 @@ Fish.prototype.prepare = function() {
 	
 	// Color/shading overlay!
 	
-	var grad = ctx.createLinearGradient(0.5 * c.width, 0, 0.5 * c.width, c.height);
+	//var grad = ctx.createLinearGradient(0.5 * c.width, 0, 0.5 * c.width, c.height);
+	var grad = [];
 
-	grad.addColorStop(0, '#ffcc00');
-	grad.addColorStop(.25, '#e69800');
-	grad.addColorStop(.8, '#a25923')
+	grad[0] = ctx.createRadialGradient(
+		0.64 * c.width, 0.45 * c.height, c.width * .1,
+		0.5 * c.width, 0.5 * c.height, c.width * .8
+	);
+	grad[0].addColorStop(0, 'rgba(255,204,0,.7)');
+	grad[0].addColorStop(.25, 'rgba(230, 152, 0, .9)');
+	grad[0].addColorStop(.8, 'rgba(146,62,0,1)')
+
+
+	grad[1] = ctx.createRadialGradient(
+		0.64 * c.width, 0.7 * c.height, c.width * .1,
+		0.5 * c.width, 0.5 * c.height, c.width * .8
+	);
+	grad[1].addColorStop(.6, 'rgba(129,153,33,.9)');
+	grad[1].addColorStop(.45, 'rgba(252,229,127,1)');
+	grad[1].addColorStop(.3, 'rgba(232,135,20,.8)');
+	grad[1].addColorStop(0, 'rgba(67,106,103,1)');
+
+	grad[2] = ctx.createLinearGradient(
+		0, c.height * .45, c.width, c.height
+	);
+	grad[2].addColorStop(.3, 'rgba(254,186,18,.9)');
+	grad[2].addColorStop(.32, 'rgba(0, 0, 0, .7)');
+	grad[2].addColorStop(.35, 'rgba(255,255,255,.9)');
+	grad[2].addColorStop(.43, 'rgba(255,255,255,.9)');
+	grad[2].addColorStop(.45, 'rgba(0,0,0,.7)');
+	grad[2].addColorStop(.47, 'rgba(254,186,18,.9)');
+	grad[2].addColorStop(.55, 'rgba(254,186,18,.9)');
+	grad[2].addColorStop(.57, 'rgba(0, 0, 0, .7)');
+	grad[2].addColorStop(.60, 'rgba(255, 255, 255, .9)');
+	grad[2].addColorStop(.62, 'rgba(255, 255, 255, .9)');
+	grad[2].addColorStop(.64, 'rgba(0, 0, 0, .7)');
+	grad[2].addColorStop(.66, 'rgba(254, 186, 18, .9)');
 	
-/*	grad.addColorStop(0, '#fff');
-	grad.addColorStop(.25, '#bbb');
-	grad.addColorStop(.8, '#333');
-*/	
-	ctx.globalAlpha = 0.7;
+	grad[3] = ctx.createRadialGradient(
+		0.8 * c.width, c.height, c.width * .1,
+		0.8 * c.width, c.height, c.width * .8
+	);
+	grad[3].addColorStop(0, 'rgba(255,255,255,.9)');
+	grad[3].addColorStop(.65, 'rgba(128, 128, 128, .9)');
+	grad[3].addColorStop(.7, 'rgba(0,0,0,.7)');
+	grad[3].addColorStop(.75, 'rgba(255, 255, 255, .5)');
+	grad[3].addColorStop(.8, 'rgba(255, 255, 255, .5)');
+	grad[3].addColorStop(.95, 'rgba(128, 128, 128, .8)');
+	
+	grad[4] = ctx.createRadialGradient(
+		0.8 * c.width, .5 * c.height, c.width * .1,
+		0.8 * c.width, .5 * c.height, c.width * .6
+	);
+	grad[4].addColorStop(.3, 'rgba(200,0,0,.9)');
+	grad[4].addColorStop(.4, 'rgba(255, 100, 0, .8)');
+	grad[4].addColorStop(.75, 'rgba(255, 0, 0,.9)');
+	grad[4].addColorStop(1, 'rgba(200, 0, 0, .7)');
+	
+	var which_grad = ~~rand(0, grad.length);
+	
+	ctx.globalAlpha = 0.9;
 	ctx.globalCompositeOperation = 'source-atop';
-	ctx.fillStyle = grad;
+	ctx.fillStyle = grad[which_grad];
 	ctx.fillRect(0, 0, c.width, c.height);
 	ctx.globalAlpha = 1;
+	
 	
 	// Draw the fins
 	ctx.globalCompositeOperation = 'destination-over';
@@ -169,32 +202,39 @@ Fish.prototype.prepare = function() {
 		this._add_fin(c, ctx, c.width - b.rb);
 	}
 	ctx.globalCompositeOperation = 'source-over';
-	
+
 	
 	// Draw the eye
 	
-	var eye_h = c.height * rand(0, .15),				// Eye height
+	var eye_h = c.height * rand(.04, .15),				// Eye height
+		eye_x = c.width * .8,	// Eye X
 		eye_s = c.height * rand(.05, .10), 			// Eye size
-		pupil_s = eye_s * rand(.2, .8),				// Pupil size
+		pupil_s = eye_s * rand(.5, .8),				// Pupil size
 		pupil_o = (eye_s - pupil_s) * rand(.2, .5),	// Pupil offset from center
 		pupil_a = rand(0, Math.PI * 2);				// Pupil angle
 	
-	ctx.fillStyle = '#ffffff';
+	var eye_grad = ctx.createRadialGradient(
+		eye_x, c.height * .5 - eye_h, 0,
+		eye_x, c.height * .5 - eye_h, eye_s);
+	eye_grad.addColorStop(.7, 'rgba(255,255,255,1)');
+	eye_grad.addColorStop(1, 'rgba(255,255,255,.5)');
+		
+	ctx.fillStyle = eye_grad; //'#ffffff';
 	ctx.beginPath();
 	ctx.arc(
-		c.width * .8, c.height * .5 - eye_h,
+		eye_x, c.height * .5 - eye_h,
 		eye_s, 0, Math.PI * 2,
 		false
 	);
 	
-	glow(ctx, 3, 'rgba(0,0,0,0.25)');		
+	glow(ctx, 5, 'rgba(0,0,0,.7)');
 	ctx.fill();
 	glow(ctx, 0, '');
 	
 	ctx.fillStyle = '#000000';
 	ctx.beginPath();
 	ctx.arc(
-		c.width * .8 + Math.cos(pupil_a) * pupil_o, c.height * .5 - eye_h + Math.sin(pupil_a) * pupil_o,
+		eye_x + Math.cos(pupil_a) * pupil_o, c.height * .5 - eye_h + Math.sin(pupil_a) * pupil_o,
 		pupil_s, 0, Math.PI * 2,
 		false
 	);
@@ -203,9 +243,8 @@ Fish.prototype.prepare = function() {
 };
 Fish.prototype.render = function(ctx) {
 	var c = this.canvas;
-	console.log("Rendering at " + this.x + ", " + this.y + " dims: " + c.width + "x" + c.height);
 
-	glow(ctx, 15, 'rgba(255,255,255,0.20)');
+	glow(ctx, 25, 'rgba(255,255,255,0.25)');		// TODO: Find a way to optimize this in the cached sprite
 	
 	ctx.drawImage(c, this.x, this.y, c.width, c.height);
 };
