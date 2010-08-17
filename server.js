@@ -1,5 +1,5 @@
-var express = require('/nodeJS/express'),
-    connect = require('/nodeJS/connect');
+var express = require('express'),
+    connect = require('connect');
 
 		
 // Create and export Express app
