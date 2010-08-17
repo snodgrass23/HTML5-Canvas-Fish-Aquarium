@@ -8,10 +8,17 @@ Sea.prototype.prepare = function () {
 		ctx = c.getContext('2d');
 	
 	var grad = ctx.createLinearGradient(0.5 * c.width, 0, 0.5 * c.width, c.height);
+	/*
 	grad.addColorStop(0, '#6bc5ea');
 	grad.addColorStop(0.1, '#1d7699');
 	grad.addColorStop(0.5, '#0a3752');
 	grad.addColorStop(1, '#072438');
+	*/
+	
+	grad.addColorStop(0, '#6bc5ea');
+	grad.addColorStop(.04, '#072438');
+	grad.addColorStop(.5, '#072438');
+	grad.addColorStop(1, '#000');
 	
 	ctx.fillStyle = grad;
 	ctx.fillRect(0, 0, c.width, c.height);
