@@ -72,24 +72,23 @@ Fish.prototype._draw_scales = function(canvas, target_ctx) {
 	c.height = canvas.height;
 	
 	
-	ctx.strokeStyle = 'rgba(0, 0, 0, .15)';
+
 	var scale_size = 11;
-//	ctx.fillStyle = '#fff';
-	ctx.fillStyle = 'rgba(255, 255, 255, .35)';
+	ctx.strokeStyle = '#000';
 	for (var x = 0; x < c.width * 2 / scale_size; x += 1) {
 		for (var y = 0; y < c.height / scale_size; y += 1) {
-			
-			ctx.beginPath();
-			ctx.arc(
-				x * scale_size * .5, y * scale_size + scale_size * .5 * (x % 2),
-				scale_size * .5 - 1, Math.PI * .4, Math.PI * 1.6,
-				false
+			circle(ctx,
+				x * scale_size * .5,
+				y * scale_size + scale_size * .5 * (x % 2),
+				scale_size * .5 - 1
 			);
-
-			
-			ctx.stroke();
 			glow(ctx, 3, '#000');		
-			//ctx.fill();
+			var opacity = (1 - (Math.abs((y * scale_size) - c.height * .5) / (c.height * .5)) * 1.15);
+			opacity *= (1 - Math.abs((x * scale_size * .5) - c.width * .6) / (c.width * .7) * 1.15);
+			ctx.fillStyle = 'rgba(255,255,255,' + opacity + ')';
+			console.log('fillstyle = ' + ctx.fillStyle);
+			ctx.fill();
+			
 		}
 	}
 	
