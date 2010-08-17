@@ -28,6 +28,9 @@
 				}
 			}
 			
+			
+			aquarium.render(sea.canvas.getContext('2d'));	// Draw transparent aquarium onto water background
+			
 			var frame = 0;
 			function main() {
 				frame = (frame + 1) % Fish.frames;
