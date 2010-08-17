@@ -114,20 +114,10 @@ Fish.prototype.prepare = function() {
 		td: c.width * rand(0, .2)			// Tail depth		
 	};
 		
-	// Draw the body
-
-	var grad = ctx.createLinearGradient(0.5 * c.width, 0, 0.5 * c.width, c.height);
-	/*
-	grad.addColorStop(0, '#ffcc00');
-	grad.addColorStop(.25, '#e69800');
-	grad.addColorStop(.8, '#a25923')
-	*/
-	grad.addColorStop(0, '#fff');
-	grad.addColorStop(.25, '#bbb');
-	grad.addColorStop(.8, '#333');
+	// Draw the body shape
 	
 	
-	ctx.fillStyle = grad;
+	ctx.fillStyle = '#fff';
 	ctx.beginPath();
 	ctx.moveTo(c.width, c.height * .5);		// Nose
 	ctx.bezierCurveTo(						// Nose -> Top tail point
@@ -151,9 +141,22 @@ Fish.prototype.prepare = function() {
 	
 	
 
-	// Draw the scales
+	// Draw the scale texture
 	this._draw_scales(c, ctx);
 		
+	
+	var grad = ctx.createLinearGradient(0.5 * c.width, 0, 0.5 * c.width, c.height);
+	/*
+	grad.addColorStop(0, '#ffcc00');
+	grad.addColorStop(.25, '#e69800');
+	grad.addColorStop(.8, '#a25923')
+	*/
+	grad.addColorStop(0, '#fff');
+	grad.addColorStop(.25, '#bbb');
+	grad.addColorStop(.8, '#333');
+	
+	
+	
 	
 	// Draw the fins
 	ctx.globalCompositeOperation = 'destination-over';
@@ -197,7 +200,7 @@ Fish.prototype.render = function(ctx) {
 	var c = this.canvas;
 	console.log("Rendering at " + this.x + ", " + this.y + " dims: " + c.width + "x" + c.height);
 
-	glow(ctx, 15, 'rgba(255,255,255,0.15)');
+	glow(ctx, 15, 'rgba(255,255,255,0.20)');
 	
 	ctx.drawImage(c, this.x, this.y, c.width, c.height);
 };
