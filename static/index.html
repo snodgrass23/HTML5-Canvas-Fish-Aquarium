@@ -7,7 +7,26 @@
     
 		<canvas id="view" width="1000" height="500"></canvas>
 		
-		<script type="text/javascript" src="fish.js"></script>
-		
+		<script type="text/javascript" src="jim.js"></script>
+		<script type="text/javascript" src="hunter.js"></script>
+
+		<script type="text/javascript">
+
+			var view = new View('view');
+			var sea = new Sea(view.canvas.width, view.canvas.height);
+			
+			sea.prepare();
+			sea.render(view.ctx);
+			
+			for (var x = 0; x < 5; x++) {
+				for (var y = 0; y < 3; y++) {
+					var fish = new Fish(50 + 200 * x, 50 + 150 * y, 100, 100);
+					fish.prepare();
+					fish.render(view.ctx);
+				}
+			}
+
+		</script>
+
 	</body>
 </html>

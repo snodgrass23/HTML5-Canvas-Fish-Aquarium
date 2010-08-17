@@ -8,10 +8,17 @@ Sea.prototype.prepare = function () {
 		ctx = c.getContext('2d');
 	
 	var grad = ctx.createLinearGradient(0.5 * c.width, 0, 0.5 * c.width, c.height);
+	/*
 	grad.addColorStop(0, '#6bc5ea');
 	grad.addColorStop(0.1, '#1d7699');
 	grad.addColorStop(0.5, '#0a3752');
 	grad.addColorStop(1, '#072438');
+	*/
+	
+	grad.addColorStop(0, '#6bc5ea');
+	grad.addColorStop(.04, '#072438');
+	grad.addColorStop(.5, '#072438');
+	grad.addColorStop(1, '#000');
 	
 	ctx.fillStyle = grad;
 	ctx.fillRect(0, 0, c.width, c.height);
@@ -131,6 +138,8 @@ Fish.prototype.prepare = function() {
 	// Color/shading overlay!
 	
 	//var grad = ctx.createLinearGradient(0.5 * c.width, 0, 0.5 * c.width, c.height);
+
+
 	var grad = [];
 
 	grad[0] = ctx.createRadialGradient(
@@ -195,7 +204,7 @@ Fish.prototype.prepare = function() {
 	ctx.fillRect(0, 0, c.width, c.height);
 	ctx.globalAlpha = 1;
 	
-	
+
 	// Draw the fins
 	ctx.globalCompositeOperation = 'destination-over';
 	for (var i = ~~rand(0, 5); i > 0; i--) {
@@ -276,16 +285,3 @@ function glow(ctx, dist, color) {
 	ctx.shadowColor = color;
 }
 
-var view = new View('view');
-var sea = new Sea(view.canvas.width, view.canvas.height);
-
-sea.prepare();
-sea.render(view.ctx);
-
-for (var x = 0; x < 5; x++) {
-	for (var y = 0; y < 3; y++) {
-		var fish = new Fish(50 + 200 * x, 50 + 150 * y, 100, 100);
-		fish.prepare();
-		fish.render(view.ctx);
-	}
-}
