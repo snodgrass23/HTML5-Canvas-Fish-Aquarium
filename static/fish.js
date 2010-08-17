@@ -145,18 +145,23 @@ Fish.prototype.prepare = function() {
 	this._draw_scales(c, ctx);
 		
 	
+	// Color/shading overlay!
+	
 	var grad = ctx.createLinearGradient(0.5 * c.width, 0, 0.5 * c.width, c.height);
-	/*
+
 	grad.addColorStop(0, '#ffcc00');
 	grad.addColorStop(.25, '#e69800');
 	grad.addColorStop(.8, '#a25923')
-	*/
-	grad.addColorStop(0, '#fff');
+	
+/*	grad.addColorStop(0, '#fff');
 	grad.addColorStop(.25, '#bbb');
 	grad.addColorStop(.8, '#333');
-	
-	
-	
+*/	
+	ctx.globalAlpha = 0.7;
+	ctx.globalCompositeOperation = 'source-atop';
+	ctx.fillStyle = grad;
+	ctx.fillRect(0, 0, c.width, c.height);
+	ctx.globalAlpha = 1;
 	
 	// Draw the fins
 	ctx.globalCompositeOperation = 'destination-over';
