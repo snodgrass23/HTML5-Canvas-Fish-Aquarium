@@ -65,6 +65,41 @@ Fish.prototype._add_fin = function(c, ctx, w) {
 	ctx.fill();
 	
 };
+Fish.prototype._draw_scales = function(canvas, target_ctx) {
+	var c = document.createElement('canvas'),
+		ctx = c.getContext('2d');
+	c.width = canvas.width;
+	c.height = canvas.height;
+	
+	
+	ctx.strokeStyle = 'rgba(0, 0, 0, .15)';
+	var scale_size = 11;
+//	ctx.fillStyle = '#fff';
+	ctx.fillStyle = 'rgba(255, 255, 255, .35)';
+	for (var x = 0; x < c.width * 2 / scale_size; x += 1) {
+		for (var y = 0; y < c.height / scale_size; y += 1) {
+			
+			ctx.beginPath();
+			ctx.arc(
+				x * scale_size * .5, y * scale_size + scale_size * .5 * (x % 2),
+				scale_size * .5 - 1, Math.PI * .4, Math.PI * 1.6,
+				false
+			);
+
+			
+			ctx.stroke();
+			glow(ctx, 3, '#000');		
+			//ctx.fill();
+		}
+	}
+	
+	//ctx.fillStyle = 'rgba(255, 0, 0, 1)';
+	//ctx.fillRect(0, 0, c.width, c.height);
+
+	target_ctx.globalCompositeOperation = 'source-atop';
+	target_ctx.drawImage(c, 0, 0, c.width, c.height);
+	target_ctx.globalCompositeOperation = 'source-over';
+};
 Fish.prototype.prepare = function() {
 	var c = this.canvas,
 		ctx = c.getContext('2d');
@@ -79,14 +114,8 @@ Fish.prototype.prepare = function() {
 		tc: c.height * rand(0, 0.4),			// Tail cut center size		
 		td: c.width * rand(0, .2)			// Tail depth		
 	};
-	
-	// Draw the fins
-	for (var i = ~~rand(0, 5); i > 0; i--) {
-		this._add_fin(c, ctx, c.width - b.rb);
-	}
-	
+		
 	// Draw the body
-
 
 	var grad = ctx.createLinearGradient(0.5 * c.width, 0, 0.5 * c.width, c.height);
 	/*
@@ -121,7 +150,19 @@ Fish.prototype.prepare = function() {
 
 	ctx.fill();
 	
-	//ctx.shadowColor = 'transparent black';
+	
+
+	// Draw the scales
+	this._draw_scales(c, ctx);
+		
+	
+	// Draw the fins
+	ctx.globalCompositeOperation = 'destination-over';
+	for (var i = ~~rand(0, 5); i > 0; i--) {
+		this._add_fin(c, ctx, c.width - b.rb);
+	}
+	ctx.globalCompositeOperation = 'source-over';
+	
 	
 	// Draw the eye
 	
@@ -170,6 +211,15 @@ function View(el_id) {
 
 function rand(a, b) {
 	return Math.random() * (b - a) + a;
+}
+
+function circle(ctx, x, y, r) {
+	ctx.beginPath();
+	ctx.arc(
+		x, y,
+		r, 0, Math.PI * 2,
+		false
+	);
 }
 
 // When precomputing, seems to lock transparency so you can't do this in the original sprites =(
