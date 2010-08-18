@@ -1,3 +1,24 @@
+// !View
+
+function View(el_id) {
+	this.canvas = document.getElementById(el_id);
+	this.ctx = this.canvas.getContext('2d');
+	
+	var canvas = document.getElementById('view');
+	canvas.width = window.innerWith || document.documentElement.clientWidth;
+	canvas.height = window.innerHeight || document.documentElement.clientHeight;
+}
+View.prototype.resize = function(w, h) {
+	this.canvas.width = w;
+	this.canvas.height = h;
+};
+View.prototype.clear = function() {
+	this.canvas.width = this.canvas.width;
+}
+
+
+// !Sea
+
 function Sea(w, h) {
 	this.canvas = document.createElement('canvas');
 	this.canvas.width = w;
@@ -23,6 +44,8 @@ Sea.prototype.render = function(ctx) {
 };
 
 
+// !Fish
+
 function Fish(x, y, w, h) {
 	this.x = x;
 	this.y = y;
@@ -39,14 +62,18 @@ function Fish(x, y, w, h) {
 	
 	Fish.all.push(this);
 }
-Fish.frames = 6;
+Fish.frames = 10;
 Fish.all = [];
 Fish.prototype._fingerprint = function() {
 	this.fins = [];
+	var h_space = 10;
 	this.fingerprint = {
-		fb: this.w * rand(.3, .75),		// Front body bulge X
+		nx: this.w - h_space,							// Nose X
+		ny: this.h * .5,					// Nose Y
+		fb: this.w * rand(.3, .75),			// Front body bulge X
 		rb: this.w * rand(.15, .25),		// Rear body bulge X
 		f: this.h * rand(0, 0.35),			// Fat Y
+		px: h_space,						// Tail point X
 		pt: this.h * rand(0.25, .75),		// Tail point distance
 		tc: this.h * rand(0, 0.4),			// Tail cut center size		
 		td: this.w * rand(0, .2),			// Tail depth		
@@ -73,7 +100,37 @@ Fish.prototype._fingerprint = function() {
 	};
 	this.fingerprint.pupil.o = (this.fingerprint.eye.s - this.fingerprint.pupil.s) * rand(.2, .5);	// Pupil offset from center
 };
-Fish.prototype._draw_fins = function(c, ctx, b) {
+Fish.prototype._draw_shape = function(c, ctx, b, frame) {
+	var angle = ((Math.PI * 2) / (Fish.frames)) * frame,
+		r = this.w * 0.1;
+	var top_pt = [b.px + r * Math.cos(angle), b.pt], // + r * Math.sin(angle)],
+		bottom_pt = [b.px + r * Math.cos(angle + Math.PI * .5), c.height - b.pt]; // + r * Math.sin(angle * Math.PI)];
+
+	ctx.fillStyle = '#fff';
+	ctx.beginPath();
+	ctx.moveTo(b.nx, b.ny);					// Nose
+	ctx.bezierCurveTo(						// Nose -> Top tail point
+		b.fb, c.height + b.f,
+		b.rb, c.height * .15,
+		top_pt[0], top_pt[1]				// Top tail point
+	);
+	ctx.bezierCurveTo(						// Top tail point -> Bottom tail point
+		b.td, c.height * .5 - b.tc,
+		b.td, c.height * .5 + b.tc,
+		bottom_pt[0], bottom_pt[1]				// Bottom tail point
+	);
+	ctx.bezierCurveTo(						// Bottom tail point -> Nose
+		b.rb, c.height - c.height * .15,
+		b.fb, -b.f,
+		b.nx, b.ny
+	);
+	ctx.fill();
+};
+Fish.prototype._draw_fins = function(c, ctx, b, frame) {
+	var angle = ((Math.PI * 2) / (Fish.frames)) * frame,
+		r = this.w * .025;
+	var dx = r * Math.cos(angle);
+	
 	ctx.globalCompositeOperation = 'destination-over';
 	for (var i in b.fins) {
 		var f = b.fins[i];
@@ -86,7 +143,7 @@ Fish.prototype._draw_fins = function(c, ctx, b) {
 		ctx.moveTo(f.s, c.height * .5);
 		ctx.quadraticCurveTo(
 			f.s - f.l * .5, f.y,
-			f.s - f.l * 1.35, f.y
+			f.s - f.l * 1.35 - dx, f.y
 		);
 		ctx.lineTo(
 			f.s - f.l, c.height * .5
@@ -186,32 +243,6 @@ Fish.prototype._draw_colors = function(c, ctx, b) {
 	ctx.fillRect(0, 0, c.width, c.height);
 	ctx.globalAlpha = 1;
 };
-Fish.prototype._draw_shape = function(c, ctx, b, frame) {
-	var angle = ((Math.PI * 2) / (Fish.frames)) * frame,
-		r = 10;
-	var top_pt = [0 + r * Math.cos(angle), b.pt], // + r * Math.sin(angle)],
-		bottom_pt = [0 + r * Math.cos(angle + Math.PI), c.height - b.pt]; // + r * Math.sin(angle * Math.PI)];
-
-	ctx.fillStyle = '#fff';
-	ctx.beginPath();
-	ctx.moveTo(c.width, c.height * .5);		// Nose
-	ctx.bezierCurveTo(						// Nose -> Top tail point
-		b.fb, c.height + b.f,
-		b.rb, c.height * .15,
-		top_pt[0], top_pt[1]				// Top tail point
-	);
-	ctx.bezierCurveTo(						// Top tail point -> Bottom tail point
-		b.td, c.height * .5 - b.tc,
-		b.td, c.height * .5 + b.tc,
-		bottom_pt[0], bottom_pt[1]				// Bottom tail point
-	);
-	ctx.bezierCurveTo(						// Bottom tail point -> Nose
-		b.rb, c.height - c.height * .15,
-		b.fb, -b.f,
-		c.width, c.height * .5
-	);
-	ctx.fill();
-};
 Fish.prototype._draw_eye = function(c, ctx, b) {
 	var eye_grad = ctx.createRadialGradient(
 		b.eye.x, c.height * .5 - b.eye.h, 0,
@@ -229,6 +260,12 @@ Fish.prototype._draw_eye = function(c, ctx, b) {
 	circle(ctx, b.eye.x + Math.cos(b.pupil.a) * b.pupil.o, c.height * .5 - b.eye.h + Math.sin(b.pupil.a) * b.pupil.o, b.pupil.s);
 	ctx.fill();
 };
+Fish.prototype._draw_glow = function(c, ctx, b, frame) {
+	ctx.globalCompositeOperation = 'destination-over';
+	glow(ctx, 30, 'rgba(255,255,255,0.35)');		
+	this._draw_shape(c, ctx, b, frame);
+	ctx.globalCompositeOperation = 'source-over';
+};
 Fish.prototype.prepare = function(frame) {
 	this.canvas[frame] = document.createElement('canvas');
 	this.canvas[frame].width = this.w;
@@ -244,24 +281,23 @@ Fish.prototype.prepare = function(frame) {
 
 	this._draw_colors(c, ctx, b);	
 
-	this._draw_fins(c, ctx, b);
+	this._draw_fins(c, ctx, b, frame);
 
 	this._draw_eye(c, ctx, b);
 	
+	this._draw_glow(c, ctx, b, frame);
+		
 };
+
 Fish.prototype.render = function(ctx, frame) {
 	var c = this.canvas[frame];
-
-	glow(ctx, 25, 'rgba(255,255,255,0.25)');		// TODO: Find a way to optimize this in the cached sprite
 	
 	ctx.drawImage(c, this.x, this.y, c.width, c.height);
 };
 
 
-function View(el_id) {
-	this.canvas = document.getElementById(el_id);
-	this.ctx = this.canvas.getContext('2d');
-}
+// !Utilities
+
 
 function rand(a, b) {
 	return Math.random() * (b - a) + a;

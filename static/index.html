@@ -5,40 +5,51 @@
     </head>
     <body>
     
-		<canvas id="view" width="1000" height="500"></canvas>
+		<canvas id="view"></canvas>
 		
         <script type="text/javascript" src="jim.js"></script>
 		<script type="text/javascript" src="hunter.js"></script>
 
-		<script type="text/javascript">
-
-			var view = new View('view');
-            
-			var sea = new Sea(view.canvas.width, view.canvas.height);
-			sea.prepare();
-			sea.render(view.ctx);
-            
-            var aquarium = new Aquarium(view.canvas.width, view.canvas.height);
-            aquarium.prepare();
-			aquarium.render(view.ctx);
-			
-			for (var x = 0; x < 5; x++) {
-				for (var y = 0; y < 3; y++) {
-					var fish = new Fish(50 + 200 * x, 50 + 150 * y, 100, 100);
-				}
-			}
+		<script type="text/javascript">			
 			
 			var frame = 0;
 			function main() {
 				frame = (frame + 1) % Fish.frames;
-				sea.render(view.ctx);
-                aquarium.render(view.ctx);
+				view.clear();
 				for (var i in Fish.all) {
 					Fish.all[i].render(view.ctx, frame);
 				}
 			}
+
+			// Found out the fastest way to clear an element is blank space; we may need 2 large canvases:
+			// 1 - for the main action in front
+			// 2 - for the background (water, aquarium, etc)
 			
-			setInterval(main, 1000 / 30);
+			view = new View('view');			
+			//var view, sea, aquarium;
+			/*
+			
+							sea = new Sea(view.canvas.width, view.canvas.height);
+				sea.prepare();
+				sea.render(view.ctx);
+	            
+	            aquarium = new Aquarium(view.canvas.width, view.canvas.height);
+	            aquarium.prepare();
+			*/
+						
+			for (var x = 0; x < 5; x++) {
+				for (var y = 0; y < 3; y++) {
+					var fish = new Fish(50 + 200 * x, 50 + 150 * y, 120, 100);
+				}
+			}
+			
+			window.onresize = function() {
+				view.resize(window.innerWidth || document.documentElement.clientWidth, window.innerHeight || document.documentElement.clientHeight);				
+			}
+	 
+			window.onresize();
+			
+			setInterval(main, 1000 / 45);
 
 		</script>
 
