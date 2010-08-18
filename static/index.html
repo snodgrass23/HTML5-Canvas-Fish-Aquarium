@@ -16,7 +16,10 @@
 			function main() {
 				frame = (frame + 1) % Fish.frames;
 				view.clear();
-				for (var i in Fish.all) {
+				water.render(view.ctx);
+                aquarium.render(view.ctx);
+                
+                for (var i in Fish.all) {
 					Fish.all[i].render(view.ctx, frame);
 				}
 			}
@@ -26,16 +29,14 @@
 			// 2 - for the background (water, aquarium, etc)
 			
 			view = new View('view');			
-			//var view, sea, aquarium;
-			/*
+			var view, water, aquarium;
 			
-							sea = new Sea(view.canvas.width, view.canvas.height);
-				sea.prepare();
-				sea.render(view.ctx);
-	            
-	            aquarium = new Aquarium(view.canvas.width, view.canvas.height);
-	            aquarium.prepare();
-			*/
+			
+			water = new Water(view.canvas.width, view.canvas.height);
+			water.prepare();
+	        
+	        aquarium = new Aquarium(view.canvas.width, view.canvas.height);
+	        aquarium.prepare();
 						
 			for (var x = 0; x < 5; x++) {
 				for (var y = 0; y < 3; y++) {
