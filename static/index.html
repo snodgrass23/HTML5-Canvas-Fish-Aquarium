@@ -32,12 +32,13 @@
 			function main() {
 				frame = (frame + 1) % Fish.frames;
 				sea.render(view.ctx);
+                aquarium.render(view.ctx);
 				for (var i in Fish.all) {
 					Fish.all[i].render(view.ctx, frame);
 				}
 			}
 			
-			setInterval(main, 1000 / 77);
+			setInterval(main, 1000 / 30);
 
 		</script>
 
