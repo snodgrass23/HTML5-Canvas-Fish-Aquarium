@@ -118,19 +118,18 @@ function Water(w, h) {
 }
 Water.frames = 10;
 Water.all = [];
-Water.prototype._draw_water = function(c, ctx, frame, x) {
+Water.prototype._draw_water = function(c, ctx, frame, x, h) {
  	
     ctx.strokeStyle = "#61afef";
     ctx.lineWidth = 3;
     var waveWidth = 75;
-    var waveHeight = 10;
     var waterHeight = 30;
     var startPosition = frame - x;
     for(var i = startPosition; i < c.width+100; i += waveWidth) {
         ctx.moveTo(i, waterHeight);
         ctx.bezierCurveTo(
-	    	i + 20, waterHeight + waveHeight,
-	    	i + waveWidth - 20, waterHeight + waveHeight + 15,
+	    	i + 20, waterHeight + h,
+	    	i + waveWidth - 20, waterHeight + h + 15,
 	    	i + waveWidth, waterHeight
 	    );
     }
@@ -158,9 +157,8 @@ Water.prototype.prepare = function (frame) {
     var c = this.canvas[frame],
 		ctx = c.getContext('2d');
     
-    this._draw_water(c, ctx, frame, 50);
-    this._draw_water(c, ctx, frame, 25);
-    this._draw_water(c, ctx, frame, -5);
+    this._draw_water(c, ctx, frame, 50, 12);
+    this._draw_water(c, ctx, frame, 25, 8);
     
 };
 Water.prototype.render = function(ctx, frame) {
