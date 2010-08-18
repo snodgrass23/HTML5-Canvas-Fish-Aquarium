@@ -13,11 +13,14 @@
 		<script type="text/javascript">			
 			
 			var frame = 0;
+            var waterFrame = 0;
 			function main() {
 				view.clear();
                 
+                if (waterFrame > Water.frames) waterFrame = 0;
+                else waterFrame++; 
                 for (var i in Water.all) {
-					Water.all[i].render(view.ctx, (frame * 10) / Water.frames);
+					Water.all[i].render(view.ctx, waterFrame);
 				}
 
                 aquarium.render(view.ctx);
