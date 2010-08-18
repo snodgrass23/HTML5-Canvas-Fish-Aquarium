@@ -17,7 +17,7 @@
 			function main() {
 				view.clear();
                 
-                if (waterFrame > Water.frames) waterFrame = 0;
+                if (waterFrame >= Water.frames) waterFrame = 0;
                 else waterFrame++; 
                 for (var i in Water.all) {
 					Water.all[i].render(view.ctx, waterFrame);

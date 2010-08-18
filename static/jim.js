@@ -110,7 +110,7 @@ function Water(w, h) {
     
     this.canvas = [];
     
-    for (var i = 0; i < Water.frames; i++) {
+    for (var i = 0; i <= Water.frames; i++) {
 		this.prepare(i);
 	}
     
