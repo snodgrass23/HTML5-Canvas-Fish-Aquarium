@@ -118,18 +118,19 @@ function Water(w, h) {
 }
 Water.frames = 10;
 Water.all = [];
-Water.prototype._draw_water = function(c, ctx, frame) {
+Water.prototype._draw_water = function(c, ctx, frame, x) {
  	
     ctx.strokeStyle = "#61afef";
     ctx.lineWidth = 3;
     var waveWidth = 75;
-    var waterHeight = 50;
-    var startPosition = frame * 100;
-    for(var i = 0; i < c.width+100; i += waveWidth) {
+    var waveHeight = 10;
+    var waterHeight = 30;
+    var startPosition = frame - x;
+    for(var i = startPosition; i < c.width+100; i += waveWidth) {
         ctx.moveTo(i, waterHeight);
         ctx.bezierCurveTo(
-	    	i + 20, waterHeight + 15,
-	    	i + waveWidth - 20, waterHeight + 30,
+	    	i + 20, waterHeight + waveHeight,
+	    	i + waveWidth - 20, waterHeight + waveHeight + 15,
 	    	i + waveWidth, waterHeight
 	    );
     }
@@ -147,6 +148,7 @@ Water.prototype._draw_water = function(c, ctx, frame) {
     
     ctx.fillStyle = grad;
     ctx.fill();
+    ctx.globalCompositeOperation = "destination-over";
 }
 Water.prototype.prepare = function (frame) {
 	this.canvas[frame] = document.createElement('canvas');
@@ -156,7 +158,9 @@ Water.prototype.prepare = function (frame) {
     var c = this.canvas[frame],
 		ctx = c.getContext('2d');
     
-    this._draw_water(c, ctx, frame);
+    this._draw_water(c, ctx, frame, 50);
+    this._draw_water(c, ctx, frame, 25);
+    this._draw_water(c, ctx, frame, -5);
     
 };
 Water.prototype.render = function(ctx, frame) {
