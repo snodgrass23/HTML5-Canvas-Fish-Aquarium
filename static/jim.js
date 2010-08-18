@@ -113,7 +113,7 @@ Water.prototype.prepare = function () {
 	var c = this.canvas,
 		ctx = c.getContext('2d');
 	
-    ctx.strokeStyle = "#7787f4";
+    ctx.strokeStyle = "#61afef";
     ctx.lineWidth = 3;
     var waveWidth = 75;
     var waterHeight = 50;
@@ -135,7 +135,7 @@ Water.prototype.prepare = function () {
 	grad.addColorStop(0, '#78c9eb');
 	grad.addColorStop(.04, '#78c9eb');
 	grad.addColorStop(.5, '#b5e1f4');
-	grad.addColorStop(1, '#46b5e3');
+	grad.addColorStop(1, '#61afef');
     
     ctx.fillStyle = grad;
     ctx.fill();
