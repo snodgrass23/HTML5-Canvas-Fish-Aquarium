@@ -16,7 +16,11 @@
 			function main() {
 				frame = (frame + 1) % Fish.frames;
 				view.clear();
-				water.render(view.ctx);
+                
+                for (var i in Water.all) {
+					Water.all[i].render(view.ctx, frame);
+				}
+
                 aquarium.render(view.ctx);
                 
                 for (var i in Fish.all) {

@@ -105,19 +105,27 @@ Aquarium.prototype.render = function(ctx) {
 // Water
 
 function Water(w, h) {
-	this.canvas = document.createElement('canvas');
-	this.canvas.width = w;
-	this.canvas.height = h;
+	this.w = w;
+	this.h = h;
+    
+    this.canvas = [];
+    
+    for (var i = 0; i < Water.frames; i++) {
+		this.prepare(i);
+	}
+    
+    Water.all.push(this);
 }
-Water.prototype.prepare = function () {
-	var c = this.canvas,
-		ctx = c.getContext('2d');
-	
+Water.frames = 10;
+Water.all = [];
+Water.prototype._draw_water = function(c, ctx, frame) {
+ 	
     ctx.strokeStyle = "#61afef";
     ctx.lineWidth = 3;
     var waveWidth = 75;
     var waterHeight = 50;
-    for(var i = 0; i < c.width; i += waveWidth) {
+    var startPosition = frame * 100;
+    for(var i = 0; i < c.width+100; i += waveWidth) {
         ctx.moveTo(i, waterHeight);
         ctx.bezierCurveTo(
 	    	i + 20, waterHeight + 15,
@@ -139,10 +147,20 @@ Water.prototype.prepare = function () {
     
     ctx.fillStyle = grad;
     ctx.fill();
+}
+Water.prototype.prepare = function (frame) {
+	this.canvas[frame] = document.createElement('canvas');
+	this.canvas[frame].width = this.w;
+	this.canvas[frame].height = this.h;
+    
+    var c = this.canvas[frame],
+		ctx = c.getContext('2d');
+    
+    this._draw_water(c, ctx, frame);
     
 };
-Water.prototype.render = function(ctx) {
-	var c = this.canvas;
+Water.prototype.render = function(ctx, frame) {
+	var c = this.canvas[frame];
 	ctx.drawImage(c, 0, 0, c.width, c.height);
 };
 
