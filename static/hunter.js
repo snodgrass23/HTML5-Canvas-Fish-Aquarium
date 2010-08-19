@@ -16,34 +16,6 @@ View.prototype.clear = function() {
 	this.canvas.width = this.canvas.width;
 }
 
-
-// !Sea
-
-function Sea(w, h) {
-	this.canvas = document.createElement('canvas');
-	this.canvas.width = w;
-	this.canvas.height = h;
-}
-Sea.prototype.prepare = function () {
-	var c = this.canvas,
-		ctx = c.getContext('2d');
-	
-	var grad = ctx.createLinearGradient(0.5 * c.width, 0, 0.5 * c.width, c.height);
-	
-	grad.addColorStop(0, '#6bc5ea');
-	grad.addColorStop(.04, '#072438');
-	grad.addColorStop(.5, '#072438');
-	grad.addColorStop(1, '#000');
-	
-	ctx.fillStyle = grad;
-	ctx.fillRect(0, 0, c.width, c.height);
-};
-Sea.prototype.render = function(ctx) {
-	var c = this.canvas;
-	ctx.drawImage(c, 0, 0, c.width, c.height);
-};
-
-
 // !Fish
 
 function Fish(x, y, w, h) {
@@ -51,6 +23,7 @@ function Fish(x, y, w, h) {
 	this.y = y;
 	this.w = w;
 	this.h = h;
+    this.s = rand(0, 4);
 	
 	this.canvas = [];
 	
@@ -62,7 +35,7 @@ function Fish(x, y, w, h) {
 	
 	Fish.all.push(this);
 }
-Fish.frames = 10;
+Fish.frames = 20;
 Fish.all = [];
 Fish.prototype._fingerprint = function() {
 	this.fins = [];
@@ -291,8 +264,15 @@ Fish.prototype.prepare = function(frame) {
 
 Fish.prototype.render = function(ctx, frame) {
 	var c = this.canvas[frame];
-	
-	ctx.drawImage(c, this.x, this.y, c.width, c.height);
+    
+    if (this.x >= view.canvas.width - c.width - 100) this.x = 0;
+    
+    if (frame == 2) new Bubbles(this.x + c.width*.8, this.y + c.height*.15, 3, 40)
+    
+    if (frame % 2 == 0) new Bubbles(this.x, this.y + c.height*.5, 1, 5)
+    
+    this.y = rand(this.y-1,this.y+1);
+	ctx.drawImage(c, this.x += this.s, this.y, c.width, c.height);
 };
 
 

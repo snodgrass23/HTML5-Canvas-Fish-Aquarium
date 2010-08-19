@@ -1,6 +1,7 @@
+<!DOCTYPE html>
 <html>
     <head>
-        <title>Plenty of Fish</title>
+        <title>Virtual Aquarium</title>
         <link rel="stylesheet" href="fish.css" type="text/css">
     </head>
     <body>
@@ -9,7 +10,7 @@
 		
         <script type="text/javascript" src="jim.js"></script>
 		<script type="text/javascript" src="hunter.js"></script>
-
+        
 		<script type="text/javascript">			
 			
 			var frame = 0;
@@ -17,10 +18,9 @@
 			function main() {
 				view.clear();
                 
-                if (waterFrame >= Water.frames) waterFrame = 0;
-                else waterFrame++; 
+
                 for (var i in Water.all) {
-					Water.all[i].render(view.ctx, waterFrame);
+					Water.all[i].render(view.ctx);
 				}
 
                 aquarium.render(view.ctx);
@@ -29,6 +29,16 @@
                 for (var i in Fish.all) {
 					Fish.all[i].render(view.ctx, frame);
 				}
+                
+                for (var i in Bubbles.all) {
+					var bubble = Bubbles.all[i]
+                    if (bubble.l > bubble.d) {
+                        Bubbles.all.splice(i, 1)
+                    } else {
+                        bubble.render(view.ctx);
+                    }
+                    
+				}
 			}
 
 			// Found out the fastest way to clear an element is blank space; we may need 2 large canvases:
@@ -36,28 +46,38 @@
 			// 2 - for the background (water, aquarium, etc)
 			
 			view = new View('view');			
-			var view, water, aquarium;
-			
-			
-			water = new Water(view.canvas.width, view.canvas.height);
-			water.prepare();
+			var view, aquarium;
 	        
 	        aquarium = new Aquarium(view.canvas.width, view.canvas.height);
 	        aquarium.prepare();
-						
-			for (var x = 0; x < 5; x++) {
-				for (var y = 0; y < 3; y++) {
-					var fish = new Fish(50 + 200 * x, 50 + 150 * y, 120, 100);
-				}
-			}
-			
+            
+            // frames, x offset, y offset, wave height, wave length
+			new Water(50, -13, 30, 15, 55);
+            new Water(45, -13, 32, 10, 50);
+                        
+			//for (var x = 0; x < 5; x++) {
+			//	for (var y = 0; y < 3; y++) {
+			//		var fish = new Fish(50 + 200 * x, 50 + 150 * y, 120, 100);
+			//	}
+			//}
+            
+            //new Fish(250, 200, 150, 100);
+            new Fish(110, 323, 120, 100);
+            //new Fish(95, 500, 200, 110);
+            new Fish(185, 100, 80, 50);
+            
+            //new Bubbles(200, 200, 4, 100);
+            //new Bubbles(200, 220, 4, 100);
+            //new Bubbles(200, 240, 4, 100);
+            
+            
 			window.onresize = function() {
 				view.resize(window.innerWidth || document.documentElement.clientWidth, window.innerHeight || document.documentElement.clientHeight);				
 			}
 	 
 			window.onresize();
 			
-			setInterval(main, 1000 / 45);
+			setInterval(main, 1000 / 25);
 
 		</script>
 
