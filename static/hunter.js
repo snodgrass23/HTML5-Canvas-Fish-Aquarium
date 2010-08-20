@@ -24,6 +24,7 @@ function Fish(x, y, w, h) {
 	this.w = w;
 	this.h = h;
     this.s = rand(0, 4);
+	this.d = 1;
 	
 	this.canvas = [];
 	
@@ -265,14 +266,19 @@ Fish.prototype.prepare = function(frame) {
 Fish.prototype.render = function(ctx, frame) {
 	var c = this.canvas[frame];
     
-    if (this.x >= view.canvas.width - c.width - 100) this.x = 0;
+    if (this.x >= view.canvas.width - c.width - 30) this.d = 0;
+	else if (this.x < 30) this.d = 1
+	
+	if (this.d) this.x += this.s
+	else this.x -= this.s
     
     if (frame == 2) new Bubbles(this.x + c.width*.8, this.y + c.height*.15, 3, 40)
     
     if (frame % 2 == 0) new Bubbles(this.x, this.y + c.height*.5, 1, 5)
     
     this.y = rand(this.y-1,this.y+1);
-	ctx.drawImage(c, this.x += this.s, this.y, c.width, c.height);
+	
+	ctx.drawImage(c, this.x, this.y, c.width, c.height);
 };
 
 
