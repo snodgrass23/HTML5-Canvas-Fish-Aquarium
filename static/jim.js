@@ -18,8 +18,12 @@ Aquarium.prototype.prepare = function () {
         var grad = ctx.createRadialGradient(
             xPos, yPos, 0,
             xPos, yPos, size);
-        grad.addColorStop(1, '#2c251d');
-        grad.addColorStop(.4, '#643c00');
+        grad.addColorStop(.4, 'rgba(64,29,00,.9)');
+        grad.addColorStop(1, 'rgba(44,25,29,.9)');
+		//grad.addColorStop(.4, 'rgba('+rand(40, 100)+','+rand(20, 90)+','+rand(10, 20)+',1)');
+        //grad.addColorStop(1, 'rgba('+rand(30, 90)+','+rand(10, 40)+','+rand(15, 50)+',1)');
+		//grad.addColorStop(1, '#2c251d');
+        //grad.addColorStop(.4, '#643c00');
             
         ctx.fillStyle = grad;
         circle(ctx, xPos, yPos, size);
