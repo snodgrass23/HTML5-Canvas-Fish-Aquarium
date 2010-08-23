@@ -5,8 +5,8 @@ function View(el_id) {
 	this.ctx = this.canvas.getContext('2d');
 	
 	var canvas = document.getElementById('view');
-	canvas.width = window.innerWith || document.documentElement.clientWidth;
-	canvas.height = window.innerHeight || document.documentElement.clientHeight;
+	//canvas.width = window.innerWith || document.documentElement.clientWidth;
+	//canvas.height = window.innerHeight || document.documentElement.clientHeight;
 }
 View.prototype.resize = function(w, h) {
 	this.canvas.width = w;
@@ -23,9 +23,10 @@ function Fish(x, y, w, h) {
 	this.y = y;
 	this.w = w;
 	this.h = h;
-    this.s = rand(0, 4);
+    this.s = rand(0, 3);
 	this.d = 1;
-	
+    this.vertDir = 0;
+	this.test = true;
 	this.canvas = [];
 	
 	this._fingerprint();
@@ -265,20 +266,37 @@ Fish.prototype.prepare = function(frame) {
 
 Fish.prototype.render = function(ctx, frame) {
 	var c = this.canvas[frame];
-    
-    if (this.x >= view.canvas.width - c.width - 30) this.d = 0;
-	else if (this.x < 30) this.d = 1
+    if (this.x >= view.canvas.width - c.width - 10) {
+        this.d = (this.d == 1) ? 0 : 1;
+        this.x = 10;
+    }
 	
-	if (this.d) this.x += this.s
-	else this.x -= this.s
+    if (this.s < 1) this.s = 1
+    if (this.s > 5) this.s = 3
+	this.x += this.s;
     
-    if (frame == 2) new Bubbles(this.x + c.width*.8, this.y + c.height*.15, 3, 40)
+    if (frame == 2) {
+        //new Bubbles(this.x + c.width*.8, this.y + c.height*.15, 4, 40);
+        if (this.y > 50 && this.y < view.canvas.height - 150) this.vertDir = rand(-1,1);
+        else if (this.y < 50) this.vertDir = 2;
+        else this.vertDir = -2;
+        if (rand(-1, 1) > 0) this.s = rand(this.s-1, this.s+1);
+        if (rand(-1, 15) < 0) {
+            this.d = (this.d == 1) ? 0 : 1;
+            this.x = view.canvas.width - this.x - c.width;
+        }
+    }
     
-    if (frame % 2 == 0) new Bubbles(this.x, this.y + c.height*.5, 1, 5)
-    
-    this.y = rand(this.y-1,this.y+1);
+    //if (frame % 2 == 0) new Bubbles(this.x, this.y + c.height*.5, 2, 10)
 	
-	ctx.drawImage(c, this.x, this.y, c.width, c.height);
+    this.y += this.vertDir;
+    ctx.save();
+    if (!this.d) {
+        ctx.translate(view.canvas.width,1);
+        ctx.scale(-1,1);
+    }
+	ctx.drawImage(c, this.x, this.y);
+    ctx.restore();
 };
 
 

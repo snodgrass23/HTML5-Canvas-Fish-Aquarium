@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
     <head>
         <title>Virtual Aquarium</title>
@@ -6,44 +5,50 @@
     </head>
     <body>
     
-		<canvas id="view">No Support for canvas!</canvas>
-		
-        <script type="text/javascript" src="jim.js"></script>
-		<script type="text/javascript" src="hunter.js"></script>
+		<div>
+            <canvas id="view" height="600" width="1000">No Support for canvas!</canvas>
+		</div>
+        <p>Click Tank to Add Fish</p>
+        
+        <h3>TODO</h3>
+        <ul>
+            <li>turn animation</li>
+            <li>add new fish at cursor position</li>
+            <li>swimming behavior towards a target (food)</li>
+            <li>optimize bubbles</li>
+            <li>move fish to back/front of array stack on turn</li>
+            <li>speech bubbles (twitter?)</li>
+            <li></li>
+        </ul>
+        
+        <script type="text/javascript" src="compiled.js"></script>
+        <!--<script type="text/javascript" src="jim.js"></script>-->
+		<!--<script type="text/javascript" src="hunter.js"></script>-->
         
 		<script type="text/javascript">			
 			
 			var frame = 0;
-            var waterFrame = 0;
+            var overAllFrame = 0;
 			function main() {
 				view.clear();
-                
-
-                for (var i in Water.all) {
-					Water.all[i].render(view.ctx);
-				}
-
+                for (var i in Water.all) Water.all[i].render(view.ctx);
                 aquarium.render(view.ctx);
-                
                 frame = (frame + 1) % Fish.frames;
-                for (var i in Fish.all) {
-					Fish.all[i].render(view.ctx, frame);
-				}
+                for (var i in Fish.all) Fish.all[i].render(view.ctx, frame);
                 
                 for (var i in Bubbles.all) {
 					var bubble = Bubbles.all[i]
-                    if (bubble.l > bubble.d) {
-                        Bubbles.all.splice(i, 1)
-                    } else {
-                        bubble.render(view.ctx);
-                    }
-                    
+                    if (bubble.l > bubble.d || bubble.y < 30) Bubbles.all.splice(i, 1)
+                    else bubble.render(view.ctx);
 				}
+                
+                if (overAllFrame % 10 == 0 && rand(-2,2) > 0) {
+                    if (rand(-2,2) > 0)new Bubbles(rand(view.canvas.width-50,view.canvas.width-90), view.canvas.height-75, rand(4,8), 500);
+                    if (rand(-2,2) > 0)new Bubbles(rand(view.canvas.width-50,view.canvas.width-90), view.canvas.height-75, rand(4,8), 500);
+                }
+                
+                overAllFrame++;
 			}
-
-			// Found out the fastest way to clear an element is blank space; we may need 2 large canvases:
-			// 1 - for the main action in front
-			// 2 - for the background (water, aquarium, etc)
 			
 			view = new View('view');			
 			var view, aquarium;
@@ -54,32 +59,26 @@
             // frames, x offset, y offset, wave height, wave length
 			new Water(50, -13, 30, 15, 55);
             new Water(45, -13, 32, 10, 50);
-                        
-			//for (var x = 0; x < 5; x++) {
-			//	for (var y = 0; y < 3; y++) {
-			//		var fish = new Fish(50 + 200 * x, 50 + 150 * y, 120, 100);
-			//	}
-			//}
             
-            //new Fish(250, 200, 150, 100);
-            new Fish(110, 323, 120, 100);
-            //new Fish(95, 500, 200, 110);
-            new Fish(185, 100, 80, 50);
+            newFish();
             
-            //new Bubbles(200, 200, 4, 100);
-            //new Bubbles(200, 220, 4, 100);
-            //new Bubbles(200, 240, 4, 100);
-            
-            
-			window.onresize = function() {
-				view.resize(window.innerWidth || document.documentElement.clientWidth, window.innerHeight || document.documentElement.clientHeight);				
-			}
-	 
-			window.onresize();
-			
-			setInterval(main, 1000 / 25);
+            var canvasObject = document.getElementById("view");
+            canvasObject.addEventListener("click", newFish, false);
 
+			setInterval(main, 1000 / 30);
+            
+            function newFish(event) {
+                var length = rand(60, 200);
+                new Fish(rand(50,view.canvas.width*.7),
+                         rand(75,view.canvas.height-150),
+                         length,
+                         rand(length*.6, length*.9));
+            }
+            
+            function fishPos(event) {
+                alert(Fish.all[0].x);
+            }
+            
 		</script>
-
 	</body>
 </html>

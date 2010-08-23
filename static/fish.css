@@ -1,12 +1,3 @@
-html, body {
-	margin: 0 0 0 0;
-	padding: 0 0 0 0;
-	background: #fffcf0;
-}
-
-canvas {
-	background: transparent;
-	position: absolute;
-	left: 0;
-	top: 0;
-}
+body {margin: 10px auto;background: #000;width:1000px;color:#fff;text-align:center;}
+body div {background:#dfeeff;height:600px;}
+ul, h3 {text-align:left;}

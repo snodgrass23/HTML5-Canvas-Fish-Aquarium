@@ -18,16 +18,13 @@ Aquarium.prototype.prepare = function () {
         var grad = ctx.createRadialGradient(
             xPos, yPos, 0,
             xPos, yPos, size);
-        grad.addColorStop(.4, 'rgba(64,29,00,.9)');
-        grad.addColorStop(1, 'rgba(44,25,29,.9)');
-		//grad.addColorStop(.4, 'rgba('+rand(40, 100)+','+rand(20, 90)+','+rand(10, 20)+',1)');
-        //grad.addColorStop(1, 'rgba('+rand(30, 90)+','+rand(10, 40)+','+rand(15, 50)+',1)');
-		//grad.addColorStop(1, '#2c251d');
-        //grad.addColorStop(.4, '#643c00');
+        var rc1 = "rgba("+Math.ceil(rand(90, 110))+","+Math.ceil(rand(50, 70))+",00,1)";
+        var rc2 = "rgba("+Math.ceil(rand(34, 54))+","+Math.ceil(rand(27, 47))+","+Math.ceil(rand(19, 39))+",1)";
+		grad.addColorStop(.4, rc1);
+        grad.addColorStop(1, rc2);
             
         ctx.fillStyle = grad;
         circle(ctx, xPos, yPos, size);
-        //glow(ctx, 5, 'rgba(0,0,0,.7)');
         ctx.fill();
         ctx.lineWidth = 1;
         ctx.strokeStyle = "#2f251c";
@@ -58,93 +55,6 @@ Aquarium.prototype.prepare = function () {
 	
 	ctx.fillStyle = grad;
     ctx.fillRect(0, 0, c.width, c.height);
-    
-    ctx.globalCompositeOperation = "destination-over";
-    
-    ctx.globalAlpha = .3;
-    
-    // dimensions of 3d tank
-    ctx.strokeStyle = "#333";
-    ctx.lineWidth = 4;
-    var border = 75;
-    ctx.beginPath();
-    
-    //  back of 3d tank
-    ctx.moveTo(border,border - 20); 
-    ctx.lineTo((c.width-ctx.lineWidth/2) - border,border - 20); 
-    ctx.lineTo((c.width-ctx.lineWidth/2) - border,(c.height-ctx.lineWidth/2) - border); 
-    ctx.lineTo(border,(c.height-ctx.lineWidth/2) - border);
-    ctx.lineTo(border,border-ctx.lineWidth/2 - 20);
-    
-    // diagonals of 3d tank
-    //top left corners
-    ctx.moveTo(border,border - 20);
-    ctx.lineTo(0,0);
-    //top right corners
-    ctx.moveTo((c.width-ctx.lineWidth/2) - border,border - 20);
-    ctx.lineTo(c.width,0);
-    //bottom right corners
-    ctx.moveTo((c.width-ctx.lineWidth/2) - border,(c.height-ctx.lineWidth/2) - border);
-    ctx.lineTo(c.width,c.height);
-    //bottom left corners
-    ctx.moveTo(border,(c.height-ctx.lineWidth/2) - border);
-    ctx.lineTo(0,c.height);
-    ctx.stroke();
-    
-    // diagonal highlights of 3d tank
-    ctx.strokeStyle = "#FFF";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    //  back of 3d tank
-    ctx.moveTo(border,border - 20); 
-    ctx.lineTo((c.width-ctx.lineWidth) - border,border - 20); 
-    ctx.lineTo((c.width-ctx.lineWidth) - border,(c.height-ctx.lineWidth/2) - border); 
-    ctx.lineTo(border,(c.height-ctx.lineWidth) - border);
-    ctx.lineTo(border,border-ctx.lineWidth - 20);
-    //top left corners
-    ctx.moveTo(border,border - 20);
-    ctx.lineTo(0,0);
-    //top right corners
-    ctx.moveTo((c.width-ctx.lineWidth/2) - border,border - 20);
-    ctx.lineTo(c.width,0);
-    //bottom right corners
-    ctx.moveTo((c.width-ctx.lineWidth/2) - border,(c.height-ctx.lineWidth/2) - border);
-    ctx.lineTo(c.width,c.height);
-    //bottom left corners
-    ctx.moveTo(border,(c.height-ctx.lineWidth/2) - border);
-    ctx.lineTo(0,c.height);
-    ctx.stroke();
-    
-	ctx.globalCompositeOperation = "source-atop";
-	
-	ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, c.width, c.height);
-    
-    ctx.globalAlpha = .4;
-    
-    // shadow on outside of frame
-    ctx.strokeStyle = "#000";
-    ctx.lineWidth = 3;
-    var topLine = ctx.lineWidth/2;
-    ctx.beginPath();
-    ctx.moveTo(0,topLine); 
-    ctx.lineTo(c.width-ctx.lineWidth/2,topLine); 
-    ctx.lineTo(c.width-ctx.lineWidth/2,c.height-ctx.lineWidth/2); 
-    ctx.lineTo(ctx.lineWidth/2,c.height-ctx.lineWidth/2);
-    ctx.lineTo(ctx.lineWidth/2,topLine);
-    ctx.stroke();
-    
-    // highlight on inside of frame
-    ctx.strokeStyle = "#DDD";
-    ctx.lineWidth = 2;
-    var offset = frameThickness;
-    ctx.beginPath();
-    ctx.moveTo(offset,offset); 
-    ctx.lineTo(c.width - offset,offset); 
-    ctx.lineTo(c.width - offset,c.height - offset); 
-    ctx.lineTo(offset, c.height - offset);
-    ctx.lineTo(offset,offset-ctx.lineWidth/2);
-    ctx.stroke();
 	
 };
 Aquarium.prototype.render = function(ctx) {
@@ -220,30 +130,24 @@ function Bubbles(x, y, s, d) {
 	this.canvas.height = view.canvas.height;
     this.x = x;
     this.y = y;
-    this.s = rand(s-1, s+1);
+    this.s = rand(s*.7, s*1.5);
     this.l = 0;
-    this.d = d;
+    this.d = rand(d*.8,d*1.2);
     this.prepare();
     Bubbles.all.push(this);
 }
 Bubbles.all = [];
 Bubbles.prototype._draw_bubble = function(c, ctx) {
-    var grad = ctx.createRadialGradient(
-		this.s+5, this.s+5, this.s-2,
-		this.s+5, this.s+5, this.s+2);
-	grad.addColorStop(.2, 'rgba(255,255,255,.0)');
-	grad.addColorStop(.3, 'rgba(255,255,255,.1)');
-	grad.addColorStop(.7, 'rgba(255,255,255,.3)');
-	grad.addColorStop(1, 'rgba(255,255,255,.9)');
-		
-	ctx.fillStyle = grad;
-	circle(ctx, this.s+5, this.s+5, this.s);
-	//glow(ctx, 5, 'rgba(0,0,0,.7)');
+	
+	ctx.globalAlpha = .4;
+    circle(ctx, this.s+5, this.s+5, this.s);
+    ctx.fillStyle = "#FFF";
 	ctx.fill();
-    ctx.strokeStyle = "#FFF";
+    ctx.strokeStyle = "#999";
     ctx.lineWidth = 1;
     ctx.stroke();
-	glow(ctx, 0, "#FFF");
+	glow(ctx, 1, "#FFF");
+    
 }
 Bubbles.prototype.prepare = function () {
     
@@ -256,14 +160,6 @@ Bubbles.prototype.render = function(ctx) {
     var c = this.canvas;
     this.l++;
     this.y = rand(this.y-1,this.y-3);
-    ctx.drawImage(c, rand(this.x-1,this.x+1) , this.y, c.width, c.height);
+    this.x = rand(this.x-1,this.x+1);
+    ctx.drawImage(c, this.x , this.y);
 }
-
-
-
-
-
-
-
-
-
