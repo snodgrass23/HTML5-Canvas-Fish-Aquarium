@@ -8,12 +8,14 @@ Aquarium.prototype.prepare = function () {
 		ctx = c.getContext('2d');
     
     var frameThickness = 15;
+	var cw = c.width;
+	var ch = c.height;
     
     // Rocks on bottom of tank
-    for (var i = 0; i < c.width*10; i++) {
-        var xPos = rand(0, c.width); 
-        var yPos = rand(c.height-80, c.height-10); 
-        var size = rand(2, 4);
+    for (var i = 0; i < cw*10; i++) {
+        var xPos = rand(0, cw); 
+        var yPos = rand(ch-80,ch-10); 
+        var size = rand(2,4);
         
         var grad = ctx.createRadialGradient(
             xPos, yPos, 0,
@@ -37,25 +39,27 @@ Aquarium.prototype.prepare = function () {
     var topLine = frameThickness/2;
     ctx.beginPath();
     ctx.moveTo(0,topLine); 
-    ctx.lineTo(c.width-ctx.lineWidth/2,topLine); 
-    ctx.lineTo(c.width-ctx.lineWidth/2,c.height-ctx.lineWidth/2); 
-    ctx.lineTo(ctx.lineWidth/2,c.height-ctx.lineWidth/2);
-    ctx.lineTo(ctx.lineWidth/2,topLine-ctx.lineWidth);
+    ctx.lineTo(cw-frameThickness/2,topLine); 
+    ctx.lineTo(cw-frameThickness/2,ch-frameThickness/2); 
+    ctx.lineTo(frameThickness/2,ch-frameThickness/2);
+    ctx.lineTo(frameThickness/2,topLine-frameThickness);
     ctx.stroke();
     
 	ctx.globalCompositeOperation = "source-atop";
     
     // shading for main frame
+	ctx.save();
+	ctx.rotate(Math.PI*10/180);
+	ctx.scale(2, 1)
 	var grad = ctx.createLinearGradient(0.5 * c.width, 0, 0.5 * c.width, c.height);
-	grad.addColorStop(0, 'rgba(255,255,255,.0)');
-	grad.addColorStop(.2, 'rgba(255,255,255,.2)');
-	grad.addColorStop(.3, 'rgba(255,255,255,.75)');
-	grad.addColorStop(.4, 'rgba(255,255,255,.3)');
-	grad.addColorStop(1, 'rgba(255,255,255,0)');
-	
+	gcs(grad,0,255,255,255,.0);
+	gcs(grad,.2,255,255,255,.2);
+	gcs(grad,.3,255,255,255,.85);
+	gcs(grad,.4,255,255,255,.3);
+	gcs(grad,1,255,255,255,0);
 	ctx.fillStyle = grad;
     ctx.fillRect(0, 0, c.width, c.height);
-	
+	ctx.restore();
 };
 Aquarium.prototype.render = function(ctx) {
 	var c = this.canvas;
@@ -138,7 +142,6 @@ function Bubbles(x, y, s, d) {
 }
 Bubbles.all = [];
 Bubbles.prototype._draw_bubble = function(c, ctx) {
-	
 	ctx.globalAlpha = .4;
     circle(ctx, this.s+5, this.s+5, this.s);
     ctx.fillStyle = "#FFF";
@@ -150,7 +153,6 @@ Bubbles.prototype._draw_bubble = function(c, ctx) {
     
 }
 Bubbles.prototype.prepare = function () {
-    
     var c = this.canvas,
 		ctx = c.getContext('2d');
         

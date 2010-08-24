@@ -26,7 +26,8 @@ function Fish(x, y, w, h) {
     this.s = rand(0, 3);
 	this.d = 1;
     this.vertDir = 0;
-	this.test = true;
+	this.target = {x:500,y:200,seek:true,dest:true};
+	this.turning = 0;
 	this.canvas = [];
 	
 	this._fingerprint();
@@ -156,61 +157,65 @@ Fish.prototype._draw_scales = function(canvas, target_ctx, b) {
 	target_ctx.globalCompositeOperation = 'source-over';
 };
 Fish.prototype._draw_colors = function(c, ctx, b) {
+	var clg = ma(ctx, 'createLinearGradient');
+	var crg = ma(ctx, 'createRadialGradient');
+	var cw = c.width;
+	var ch = c.height;
+	
 	var grad = [];
 
-	grad[0] = ctx.createRadialGradient(
-		0.64 * c.width, 0.45 * c.height, c.width * .1,
-		0.5 * c.width, 0.5 * c.height, c.width * .8
+	grad[0] = crg(
+		0.64 * cw, 0.45 * ch, cw * .1,
+		0.5 * cw, 0.5 * ch, cw * .8
 	);
-	grad[0].addColorStop(0, 'rgba(255,204,0,.7)');
-	grad[0].addColorStop(.25, 'rgba(230, 152, 0, .9)');
-	grad[0].addColorStop(.8, 'rgba(146,62,0,1)')
+	gcs(grad[0],0,255,204,0,.7)
+	gcs(grad[0],.25,230, 152, 0, .9)
+	gcs(grad[0],.8,146,62,0,1)
 
-
-	grad[1] = ctx.createRadialGradient(
-		0.64 * c.width, 0.7 * c.height, c.width * .1,
-		0.5 * c.width, 0.5 * c.height, c.width * .8
+	grad[1] = crg(
+		0.64 * cw, 0.7 * ch, cw * .1,
+		0.5 * cw, 0.5 * ch, cw * .8
 	);
-	grad[1].addColorStop(.6, 'rgba(129,153,33,.9)');
-	grad[1].addColorStop(.45, 'rgba(252,229,127,1)');
-	grad[1].addColorStop(.3, 'rgba(232,135,20,.8)');
-	grad[1].addColorStop(0, 'rgba(67,106,103,1)');
+	gcs(grad[1],.6,129,153,33,.9);
+	gcs(grad[1],.45,252,229,127,1);
+	gcs(grad[1],.3,232,135,20,.8);
+	gcs(grad[1],0,67,106,103,1);
 
-	grad[2] = ctx.createLinearGradient(
-		0, c.height * .45, c.width, c.height
+	grad[2] = clg(
+		0, ch * .45, cw, ch
 	);
-	grad[2].addColorStop(.3, 'rgba(254,186,18,.9)');
-	grad[2].addColorStop(.32, 'rgba(0, 0, 0, .7)');
-	grad[2].addColorStop(.35, 'rgba(255,255,255,.9)');
-	grad[2].addColorStop(.43, 'rgba(255,255,255,.9)');
-	grad[2].addColorStop(.45, 'rgba(0,0,0,.7)');
-	grad[2].addColorStop(.47, 'rgba(254,186,18,.9)');
-	grad[2].addColorStop(.55, 'rgba(254,186,18,.9)');
-	grad[2].addColorStop(.57, 'rgba(0, 0, 0, .7)');
-	grad[2].addColorStop(.60, 'rgba(255, 255, 255, .9)');
-	grad[2].addColorStop(.62, 'rgba(255, 255, 255, .9)');
-	grad[2].addColorStop(.64, 'rgba(0, 0, 0, .7)');
-	grad[2].addColorStop(.66, 'rgba(254, 186, 18, .9)');
+	gcs(grad[2],.3,254,186,18,.9)
+	gcs(grad[2],.32,0,0,0,.7);
+	gcs(grad[2],.35,255,255,255,.9);
+	gcs(grad[2],.43,255,255,255,.9);
+	gcs(grad[2],.45,0,0,0,.7);
+	gcs(grad[2],.47,254,186,18,.9);
+	gcs(grad[2],.55,254,186,18,.9);
+	gcs(grad[2],.57,0,0,0,.7);
+	gcs(grad[2],.60,255,255,255,.9);
+	gcs(grad[2],.62,255,255,255,.9);
+	gcs(grad[2],.64,0,0,0,.7);
+	gcs(grad[2],.66,254,186,18,.9);
 	
-	grad[3] = ctx.createRadialGradient(
-		0.8 * c.width, c.height, c.width * .1,
-		0.8 * c.width, c.height, c.width * .8
+	grad[3] = crg(
+		0.8 * cw, ch, cw * .1,
+		0.8 * cw, ch, cw * .8
 	);
-	grad[3].addColorStop(0, 'rgba(255,255,255,.9)');
-	grad[3].addColorStop(.65, 'rgba(128, 128, 128, .9)');
-	grad[3].addColorStop(.7, 'rgba(0,0,0,.7)');
-	grad[3].addColorStop(.75, 'rgba(255, 255, 255, .5)');
-	grad[3].addColorStop(.8, 'rgba(255, 255, 255, .5)');
-	grad[3].addColorStop(.95, 'rgba(128, 128, 128, .8)');
+	gcs(grad[3],0,255,255,255,.9);
+	gcs(grad[3],.65,128,128,128,.9);
+	gcs(grad[3],.7,0,0,0,.7);
+	gcs(grad[3],.75,255,255,255,.5);
+	gcs(grad[3],.8,255,255,255,.5);
+	gcs(grad[3],.95,128,128,128,.8);
 	
-	grad[4] = ctx.createRadialGradient(
-		0.8 * c.width, .5 * c.height, c.width * .1,
-		0.8 * c.width, .5 * c.height, c.width * .6
+	grad[4] = crg(
+		0.8 * cw, .5 * ch, cw * .1,
+		0.8 * cw, .5 * ch, cw * .6
 	);
-	grad[4].addColorStop(.3, 'rgba(200,0,0,.9)');
-	grad[4].addColorStop(.4, 'rgba(255, 100, 0, .8)');
-	grad[4].addColorStop(.75, 'rgba(255, 0, 0,.9)');
-	grad[4].addColorStop(1, 'rgba(200, 0, 0, .7)');
+	gcs(grad[4],.3,200,0,0,.9);
+	gcs(grad[4],.4,255,100,0,.8);
+	gcs(grad[4],.75,255, 0,0,.9);
+	gcs(grad[4],1,200,0,0,.7);
 	
 	ctx.globalAlpha = 0.9;
 	ctx.globalCompositeOperation = 'source-atop';
@@ -266,17 +271,31 @@ Fish.prototype.prepare = function(frame) {
 
 Fish.prototype.render = function(ctx, frame) {
 	var c = this.canvas[frame];
-    if (this.x >= view.canvas.width - c.width - 10) {
-        this.d = (this.d == 1) ? 0 : 1;
-        this.x = 10;
+    if (this.x >= view.canvas.width - c.width - 10 && this.turning == 0) {
+		this.d = (this.d == 1) ? 0 : 1;
+		//this.turning = 1;
+		this.x = 10;
     }
+	//if(this.target.seek) {
+	//	if(this.d) {
+	//		this.d = (this.x < this.target.x) ? 0:1;
+	//	} else {
+	//		this.d = (this.x < this.target.x) ? 1:0;
+	//	}
+	//	this.x = view.canvas.width - this.x - c.width;
+	//	this.target.seek = false;
+	//	this.target.dest = false;
+	//}
+	//
+	//if (!this.target.dest) {
+	//	
+	//}
 	
     if (this.s < 1) this.s = 1
     if (this.s > 5) this.s = 3
-	this.x += this.s;
+	if(this.turning == 0)this.x += this.s;
     
-    if (frame == 2) {
-        //new Bubbles(this.x + c.width*.8, this.y + c.height*.15, 4, 40);
+    if (frame == 2 && this.target.dest) {
         if (this.y > 50 && this.y < view.canvas.height - 150) this.vertDir = rand(-1,1);
         else if (this.y < 50) this.vertDir = 2;
         else this.vertDir = -2;
@@ -287,14 +306,19 @@ Fish.prototype.render = function(ctx, frame) {
         }
     }
     
-    //if (frame % 2 == 0) new Bubbles(this.x, this.y + c.height*.5, 2, 10)
-	
     this.y += this.vertDir;
     ctx.save();
-    if (!this.d) {
-        ctx.translate(view.canvas.width,1);
-        ctx.scale(-1,1);
-    }
+    
+	if (this.turning > 0) {
+		ctx.translate(this.x,0);
+		ctx.scale(.7,1);
+		//this.turning++;
+	} else {
+		if (!this.d) {
+			ctx.translate(view.canvas.width,1);
+			ctx.scale(-1,1);
+		}
+	}
 	ctx.drawImage(c, this.x, this.y);
     ctx.restore();
 };
@@ -324,3 +348,12 @@ function glow(ctx, dist, color) {
 	ctx.shadowColor = color;
 }
 
+function gcs(grad,p,r,g,b,a) {
+	grad.addColorStop(p, 'rgba('+r+','+g+','+b+','+a+')');
+}
+
+function ma(o,n) {
+    var fn = o ? o[n] : null;
+    if (typeof fn == 'undefined') return function () {}
+    return function () {return fn.apply(o, arguments)}
+}
