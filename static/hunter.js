@@ -82,7 +82,6 @@ Fish.prototype._draw_shape = function(c, ctx, b, frame) {
 	var top_pt = [b.px + r * Math.cos(angle), b.pt], // + r * Math.sin(angle)],
 		bottom_pt = [b.px + r * Math.cos(angle + Math.PI * .5), c.height - b.pt]; // + r * Math.sin(angle * Math.PI)];
 
-	ctx.fillStyle = '#fff';
 	ctx.beginPath();
 	ctx.moveTo(b.nx, b.ny);					// Nose
 	ctx.bezierCurveTo(						// Nose -> Top tail point
@@ -100,6 +99,9 @@ Fish.prototype._draw_shape = function(c, ctx, b, frame) {
 		b.fb, -b.f,
 		b.nx, b.ny
 	);
+	var grad = this._build_gradients(c, ctx, b);
+	if (ctx.globalCompositeOperation) ctx.fillStyle = "#FFF";
+	else ctx.fillStyle = grad[b.grad];
 	ctx.fill();
 };
 Fish.prototype._draw_fins = function(c, ctx, b, frame) {
@@ -134,7 +136,7 @@ Fish.prototype._draw_scales = function(canvas, target_ctx, b) {
 	c.width = canvas.width;
 	c.height = canvas.height;
 	
-	var scale_size = 11;
+	var scale_size = this.h/10;
 	ctx.strokeStyle = '#000';
 	for (var x = 0; x < c.width * 2 / scale_size; x += 1) {
 		for (var y = 0; y < c.height / scale_size; y += 1) {
@@ -156,12 +158,20 @@ Fish.prototype._draw_scales = function(canvas, target_ctx, b) {
 	target_ctx.drawImage(c, 0, 0, c.width, c.height);
 	target_ctx.globalCompositeOperation = 'source-over';
 };
-Fish.prototype._draw_colors = function(c, ctx, b) {
+Fish.prototype._draw_colors = function(c, ctx, b) {	
+	var grad = this._build_gradients(c, ctx, b);
+	
+	ctx.globalAlpha = 0.9;
+	ctx.globalCompositeOperation = 'source-atop';
+	ctx.fillStyle = grad[b.grad];
+	ctx.fillRect(0, 0, c.width, c.height);
+	ctx.globalAlpha = 1;
+};
+Fish.prototype._build_gradients = function(c, ctx, b) {
 	var clg = ma(ctx, 'createLinearGradient');
 	var crg = ma(ctx, 'createRadialGradient');
 	var cw = c.width;
 	var ch = c.height;
-	
 	var grad = [];
 
 	grad[0] = crg(
@@ -216,13 +226,8 @@ Fish.prototype._draw_colors = function(c, ctx, b) {
 	gcs(grad[4],.4,255,100,0,.8);
 	gcs(grad[4],.75,255, 0,0,.9);
 	gcs(grad[4],1,200,0,0,.7);
-	
-	ctx.globalAlpha = 0.9;
-	ctx.globalCompositeOperation = 'source-atop';
-	ctx.fillStyle = grad[b.grad];
-	ctx.fillRect(0, 0, c.width, c.height);
-	ctx.globalAlpha = 1;
-};
+	return grad;
+}
 Fish.prototype._draw_eye = function(c, ctx, b) {
 	var eye_grad = ctx.createRadialGradient(
 		b.eye.x, c.height * .5 - b.eye.h, 0,
@@ -257,24 +262,23 @@ Fish.prototype.prepare = function(frame) {
 
 	this._draw_shape(c, ctx, b, frame);
 
-	this._draw_scales(c, ctx, b);
+	if (ctx.globalCompositeOperation) this._draw_scales(c, ctx, b);
 
-	this._draw_colors(c, ctx, b);	
+	if (ctx.globalCompositeOperation) this._draw_colors(c, ctx, b);	
 
 	this._draw_fins(c, ctx, b, frame);
-
-	this._draw_eye(c, ctx, b);
 	
-	this._draw_glow(c, ctx, b, frame);
-		
+	if (ctx.globalCompositeOperation) this._draw_glow(c, ctx, b, frame);
+	
+	this._draw_eye(c, ctx, b);
 };
 
 Fish.prototype.render = function(ctx, frame) {
 	var c = this.canvas[frame];
-    if (this.x >= view.canvas.width - c.width - 10 && this.turning == 0) {
+    if (this.x >= view.canvas.width - c.width && this.turning == 0) {
 		this.d = (this.d == 1) ? 0 : 1;
 		//this.turning = 1;
-		this.x = 10;
+		this.x = 0;
     }
 	//if(this.target.seek) {
 	//	if(this.d) {
@@ -296,7 +300,7 @@ Fish.prototype.render = function(ctx, frame) {
 	if(this.turning == 0)this.x += this.s;
     
     if (frame == 2 && this.target.dest) {
-        if (this.y > 50 && this.y < view.canvas.height - 150) this.vertDir = rand(-1,1);
+		if (this.y > 50 && this.y < view.canvas.height - 175) this.vertDir = rand(-1,1);
         else if (this.y < 50) this.vertDir = 2;
         else this.vertDir = -2;
         if (rand(-1, 1) > 0) this.s = rand(this.s-1, this.s+1);
@@ -305,6 +309,7 @@ Fish.prototype.render = function(ctx, frame) {
             this.x = view.canvas.width - this.x - c.width;
         }
     }
+	
     
     this.y += this.vertDir;
     ctx.save();

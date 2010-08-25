@@ -13,8 +13,8 @@ Aquarium.prototype.prepare = function () {
     
     // Rocks on bottom of tank
     for (var i = 0; i < cw*10; i++) {
-        var xPos = rand(0, cw); 
-        var yPos = rand(ch-80,ch-10); 
+        var xPos = rand(10, cw-10); 
+        var yPos = rand(ch-rand(65,72),ch-10); 
         var size = rand(2,4);
         
         var grad = ctx.createRadialGradient(
@@ -48,18 +48,20 @@ Aquarium.prototype.prepare = function () {
 	ctx.globalCompositeOperation = "source-atop";
     
     // shading for main frame
-	ctx.save();
-	ctx.rotate(Math.PI*10/180);
-	ctx.scale(2, 1)
-	var grad = ctx.createLinearGradient(0.5 * c.width, 0, 0.5 * c.width, c.height);
-	gcs(grad,0,255,255,255,.0);
-	gcs(grad,.2,255,255,255,.2);
-	gcs(grad,.3,255,255,255,.85);
-	gcs(grad,.4,255,255,255,.3);
-	gcs(grad,1,255,255,255,0);
-	ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, c.width, c.height);
-	ctx.restore();
+	if (ctx.globalCompositeOperation) {
+		ctx.save();
+		ctx.rotate(Math.PI*10/180);
+		ctx.scale(2, 1)
+		var grad = ctx.createLinearGradient(0.5 * c.width, 0, 0.5 * c.width, c.height);
+		gcs(grad,0,255,255,255,.0);
+		gcs(grad,.2,255,255,255,.2);
+		gcs(grad,.3,255,255,255,.85);
+		gcs(grad,.4,255,255,255,.3);
+		gcs(grad,1,255,255,255,0);
+		ctx.fillStyle = grad;
+		ctx.fillRect(0, 0, c.width, c.height);
+		ctx.restore();
+	}
 };
 Aquarium.prototype.render = function(ctx) {
 	var c = this.canvas;
@@ -134,22 +136,27 @@ function Bubbles(x, y, s, d) {
 	this.canvas.height = view.canvas.height;
     this.x = x;
     this.y = y;
-    this.s = rand(s*.7, s*1.5);
-    this.l = 0;
-    this.d = rand(d*.8,d*1.2);
+    this.s = rand(s*.9, s*1.1);
     this.prepare();
     Bubbles.all.push(this);
 }
 Bubbles.all = [];
 Bubbles.prototype._draw_bubble = function(c, ctx) {
-	ctx.globalAlpha = .4;
-    circle(ctx, this.s+5, this.s+5, this.s);
+	ctx.globalAlpha = .15;
+    var offset = this.s+5;
+    circle(ctx, offset, offset, this.s);
     ctx.fillStyle = "#FFF";
 	ctx.fill();
-    ctx.strokeStyle = "#999";
+    ctx.strokeStyle = "#77c1ff";
+    ctx.globalAlpha = .3;
     ctx.lineWidth = 1;
     ctx.stroke();
-	glow(ctx, 1, "#FFF");
+    ctx.fillStyle = "#FFF";
+    ctx.globalAlpha = .15;
+    ctx.fillRect(offset*0.7,
+                 offset*0.7,
+                 this.s*.4,
+                 this.s*.4);
     
 }
 Bubbles.prototype.prepare = function () {
@@ -160,8 +167,13 @@ Bubbles.prototype.prepare = function () {
 }
 Bubbles.prototype.render = function(ctx) {
     var c = this.canvas;
-    this.l++;
-    this.y = rand(this.y-1,this.y-3);
-    this.x = rand(this.x-1,this.x+1);
+    
+	if(this.y < 25) {
+		this.y = Math.floor(rand(view.canvas.height-20,view.canvas.height));
+		this.x = Math.floor(rand(view.canvas.width-80,view.canvas.width-90));
+	} else {
+		this.y = Math.floor(rand(this.y-2,this.y-5));
+		this.x = Math.floor(rand(this.x-1,this.x+2));
+	}
     ctx.drawImage(c, this.x , this.y);
 }

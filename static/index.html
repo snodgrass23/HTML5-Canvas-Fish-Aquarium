@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>Virtual Aquarium</title>
@@ -15,10 +16,11 @@
             <li>turn animation</li>
             <li>add new fish at cursor position</li>
             <li>swimming behavior towards a target (food)</li>
-            <li>optimize bubbles</li>
             <li>move fish to back/front of array stack on turn</li>
             <li>speech bubbles (twitter?)</li>
-            <li></li>
+            <li>click to "kill" a fish</li>
+            <li>tank decorations (front and back of tank so fish swim between them)</li>
+            <li>controls (add fish, feed, etc)</li>
         </ul>
         
         <!--<script type="text/javascript" src="compiled.js"></script>-->
@@ -28,26 +30,17 @@
 		<script type="text/javascript">			
 			
 			var frame = 0;
-            var overAllFrame = 0;
 			function main() {
 				view.clear();
                 for (var i in Water.all) Water.all[i].render(view.ctx);
-                aquarium.render(view.ctx);
+                
+                for (var i in Bubbles.all) Bubbles.all[i].render(view.ctx);
+                
                 frame = (frame + 1) % Fish.frames;
                 for (var i in Fish.all) Fish.all[i].render(view.ctx, frame);
                 
-                for (var i in Bubbles.all) {
-					var bubble = Bubbles.all[i]
-                    if (bubble.l > bubble.d || bubble.y < 30) Bubbles.all.splice(i, 1)
-                    else bubble.render(view.ctx);
-				}
-                
-                if (overAllFrame % 10 == 0 && rand(-2,2) > 0) {
-                    if (rand(-2,2) > 0)new Bubbles(rand(view.canvas.width-50,view.canvas.width-90), view.canvas.height-75, rand(4,8), 500);
-                    if (rand(-2,2) > 0)new Bubbles(rand(view.canvas.width-50,view.canvas.width-90), view.canvas.height-75, rand(4,8), 500);
-                }
-                
-                overAllFrame++;
+                aquarium.render(view.ctx);
+
 			}
 			
 			view = new View('view');			
@@ -62,22 +55,23 @@
             
             newFish();
             
+			for (var i = view.canvas.height; i > 0 ; i-=Math.floor(rand(10,35))) {
+				new Bubbles(rand(view.canvas.width-80,view.canvas.width-90), i, 8);	
+			}
+			
             var canvasObject = document.getElementById("view");
             canvasObject.addEventListener("click", newFish, false);
 
-			setInterval(main, 1000 / 30);
+			setInterval(main, 1000 / 40);
             
             function newFish(event) {
-                var length = rand(60, 200);
+				var length = rand(60, 200);
                 new Fish(rand(50,view.canvas.width*.7),
                          rand(75,view.canvas.height-150),
                          length,
                          rand(length*.6, length*.9));
             }
-            
-            function fishPos(event) {
-                alert(Fish.all[0].x);
-            }
+
             
 		</script>
 	</body>
