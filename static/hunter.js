@@ -26,15 +26,15 @@ function Fish(x, y, w, h) {
     this.s = rand(0, 3);
 	this.d = 1;
     this.vertDir = 0;
-	this.target = {x:500,y:200,seek:true,dest:true};
-	this.turning = 0;
+    this.stopped = 0;
 	this.canvas = [];
 	
 	this._fingerprint();
 
 	for (var i = 0; i < Fish.frames; i++) {
 		this.prepare(i);
-	}	
+	}
+    this.prepare(Fish.frames);
 	
 	Fish.all.push(this);
 }
@@ -103,6 +103,22 @@ Fish.prototype._draw_shape = function(c, ctx, b, frame) {
 	if (ctx.globalCompositeOperation) ctx.fillStyle = "#FFF";
 	else ctx.fillStyle = grad[b.grad];
 	ctx.fill();
+};
+Fish.prototype._draw_profile = function(c, ctx, b, frame) {
+	var angle = ((Math.PI * 2) / (Fish.frames)) * frame,
+		r = this.w * 0.1;
+    var top_pt = [b.px + r * Math.cos(angle), b.pt], // + r * Math.sin(angle)],
+		bottom_pt = [b.px + r * Math.cos(angle + Math.PI * .5), c.height - b.pt]; // + r * Math.sin(angle * Math.PI)];
+    ctx.save();
+    ctx.translate(c.width* .15,0);
+    ctx.scale(.2,1);
+    circle(ctx, c.width*.5, c.height * .5, this.h*.3);
+	var grad = this._build_gradients(c, ctx, b);
+    ctx.restore();
+	if (ctx.globalCompositeOperation2) ctx.fillStyle = "#FFF";
+	else ctx.fillStyle = grad[b.grad];
+	ctx.fill();
+    
 };
 Fish.prototype._draw_fins = function(c, ctx, b, frame) {
 	var angle = ((Math.PI * 2) / (Fish.frames)) * frame,
@@ -228,7 +244,7 @@ Fish.prototype._build_gradients = function(c, ctx, b) {
 	gcs(grad[4],1,200,0,0,.7);
 	return grad;
 }
-Fish.prototype._draw_eye = function(c, ctx, b) {
+Fish.prototype._draw_eye = function(c, ctx, b, frame) {
 	var eye_grad = ctx.createRadialGradient(
 		b.eye.x, c.height * .5 - b.eye.h, 0,
 		b.eye.x, c.height * .5 - b.eye.h, b.eye.s);
@@ -245,6 +261,33 @@ Fish.prototype._draw_eye = function(c, ctx, b) {
 	circle(ctx, b.eye.x + Math.cos(b.pupil.a) * b.pupil.o, c.height * .5 - b.eye.h + Math.sin(b.pupil.a) * b.pupil.o, b.pupil.s);
 	ctx.fill();
 };
+Fish.prototype._draw_eyes = function(c, ctx, b, frame) {
+	var eye_grad = ctx.createRadialGradient(
+		b.eye.x, c.height * .5 - b.eye.h, 0,
+		b.eye.x, c.height * .5 - b.eye.h, b.eye.s);
+	eye_grad.addColorStop(.7, 'rgba(255,255,255,1)');
+	eye_grad.addColorStop(1, 'rgba(255,255,255,.5)');
+		
+	ctx.fillStyle = eye_grad;
+	circle(ctx, b.eye.x-c.width/2, c.height * .5 - b.eye.h, b.eye.s);
+	glow(ctx, 5, 'rgba(0,0,0,.7)');
+	ctx.fill();
+	glow(ctx, 0, '');
+	
+	ctx.fillStyle = '#000000';
+	circle(ctx, b.eye.x + Math.cos(b.pupil.a) * b.pupil.o-c.width/2, c.height * .5 - b.eye.h + Math.sin(b.pupil.a) * b.pupil.o, b.pupil.s);
+	ctx.fill();
+    
+    ctx.fillStyle = eye_grad;
+	circle(ctx, b.eye.x-b.eye.s*2-c.width/2, c.height * .5 - b.eye.h, b.eye.s);
+	glow(ctx, 5, 'rgba(0,0,0,.7)');
+	ctx.fill();
+	glow(ctx, 0, '');
+	
+	ctx.fillStyle = '#000000';
+	circle(ctx, b.eye.x + Math.cos(b.pupil.a) * b.pupil.o-b.eye.s*2-c.width/2, c.height * .5 - b.eye.h + Math.sin(b.pupil.a) * b.pupil.o, b.pupil.s);
+	ctx.fill();
+};
 Fish.prototype._draw_glow = function(c, ctx, b, frame) {
 	ctx.globalCompositeOperation = 'destination-over';
 	glow(ctx, 30, 'rgba(255,255,255,0.35)');		
@@ -259,72 +302,64 @@ Fish.prototype.prepare = function(frame) {
 	var c = this.canvas[frame],
 		ctx = c.getContext('2d'),
 		b = this.fingerprint;
-
-	this._draw_shape(c, ctx, b, frame);
-
-	if (ctx.globalCompositeOperation) this._draw_scales(c, ctx, b);
-
-	if (ctx.globalCompositeOperation) this._draw_colors(c, ctx, b);	
-
-	this._draw_fins(c, ctx, b, frame);
+    
+    if (frame == Fish.frames) {
+        this._draw_profile(c, ctx, b, frame);
+        this._draw_eyes(c, ctx, b, frame);
+    } else {
+        this._draw_shape(c, ctx, b, frame);
+        if (ctx.globalCompositeOperation) this._draw_scales(c, ctx, b);
+        if (ctx.globalCompositeOperation) this._draw_colors(c, ctx, b);	
+        this._draw_fins(c, ctx, b, frame);
+        if (ctx.globalCompositeOperation) this._draw_glow(c, ctx, b, frame);
+        this._draw_eye(c, ctx, b);
+    }
+    
 	
-	if (ctx.globalCompositeOperation) this._draw_glow(c, ctx, b, frame);
-	
-	this._draw_eye(c, ctx, b);
 };
 
 Fish.prototype.render = function(ctx, frame) {
-	var c = this.canvas[frame];
-    if (this.x >= view.canvas.width - c.width && this.turning == 0) {
+    var c = this.canvas[frame];
+    if (this.x >= view.canvas.width - c.width - 5 && this.stopped == 0) {
 		this.d = (this.d == 1) ? 0 : 1;
-		//this.turning = 1;
-		this.x = 0;
+        this.x = 0;
+        this.stopped = 1;
     }
-	//if(this.target.seek) {
-	//	if(this.d) {
-	//		this.d = (this.x < this.target.x) ? 0:1;
-	//	} else {
-	//		this.d = (this.x < this.target.x) ? 1:0;
-	//	}
-	//	this.x = view.canvas.width - this.x - c.width;
-	//	this.target.seek = false;
-	//	this.target.dest = false;
-	//}
-	//
-	//if (!this.target.dest) {
-	//	
-	//}
-	
-    if (this.s < 1) this.s = 1
-    if (this.s > 5) this.s = 3
-	if(this.turning == 0)this.x += this.s;
     
-    if (frame == 2 && this.target.dest) {
-		if (this.y > 50 && this.y < view.canvas.height - 175) this.vertDir = rand(-1,1);
+    if (this.stopped > 3 && rand(-2, 1) > 0) {
+        this.stopped = 0;
+        c = this.canvas[frame];
+    } else if (this.stopped > 0){
+        this.stopped++;
+        c = this.canvas[Fish.frames];
+    }
+    
+    if (frame == 2) {
+        if (this.y > 50 && this.y < view.canvas.height - 175) this.vertDir = rand(-1,1);
         else if (this.y < 50) this.vertDir = 2;
         else this.vertDir = -2;
         if (rand(-1, 1) > 0) this.s = rand(this.s-1, this.s+1);
         if (rand(-1, 15) < 0) {
             this.d = (this.d == 1) ? 0 : 1;
             this.x = view.canvas.width - this.x - c.width;
+            this.stopped = 1
         }
     }
-	
     
-    this.y += this.vertDir;
+    if (this.s < 1) this.s = 1
+    if (this.s > 5) this.s = 3
+    if (frame < Fish.frames && this.stopped == 0) this.x += this.s;
+    
+    if (frame < Fish.frames) this.y += this.vertDir;
     ctx.save();
     
-	if (this.turning > 0) {
-		ctx.translate(this.x,0);
-		ctx.scale(.7,1);
-		//this.turning++;
-	} else {
-		if (!this.d) {
-			ctx.translate(view.canvas.width,1);
-			ctx.scale(-1,1);
-		}
-	}
-	ctx.drawImage(c, this.x, this.y);
+    
+    if (!this.d) {
+        ctx.translate(view.canvas.width,1);
+        ctx.scale(-1,1);
+    }
+    
+    ctx.drawImage(c, this.x, this.y);
     ctx.restore();
 };
 

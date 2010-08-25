@@ -1,78 +1,17 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Virtual Aquarium</title>
-        <link rel="stylesheet" href="fish.css" type="text/css">
+        <title>Canvas Aquarium</title>
+        <style type="text/css">
+        body {margin: 10px auto;background: #000;width:1000px;color:#fff;text-align:center;}
+        div {background:#dfeeff;height:600px;}</style>
     </head>
     <body>
-    
-		<div>
-            <canvas id="view" height="600" width="1000">No Support for canvas!</canvas>
-		</div>
-        <p>Click Tank to Add Fish</p>
+        <div>
+            <canvas id="view" width="1000" height="600"></canvas>
+        </div>
+        <p>Click on Tank to Add Fish</p>
+        <script type="text/javascript" src="compiled.js"></script>
         
-        <h3>TODO</h3>
-        <ul>
-            <li>turn animation</li>
-            <li>add new fish at cursor position</li>
-            <li>swimming behavior towards a target (food)</li>
-            <li>move fish to back/front of array stack on turn</li>
-            <li>speech bubbles (twitter?)</li>
-            <li>click to "kill" a fish</li>
-            <li>tank decorations (front and back of tank so fish swim between them)</li>
-            <li>controls (add fish, feed, etc)</li>
-        </ul>
-        
-        <!--<script type="text/javascript" src="compiled.js"></script>-->
-        <script type="text/javascript" src="jim.js"></script>
-		<script type="text/javascript" src="hunter.js"></script>
-        
-		<script type="text/javascript">			
-			
-			var frame = 0;
-			function main() {
-				view.clear();
-                for (var i in Water.all) Water.all[i].render(view.ctx);
-                
-                for (var i in Bubbles.all) Bubbles.all[i].render(view.ctx);
-                
-                frame = (frame + 1) % Fish.frames;
-                for (var i in Fish.all) Fish.all[i].render(view.ctx, frame);
-                
-                aquarium.render(view.ctx);
-
-			}
-			
-			view = new View('view');			
-			var view, aquarium;
-	        
-	        aquarium = new Aquarium(view.canvas.width, view.canvas.height);
-	        aquarium.prepare();
-            
-            // frames, x offset, y offset, wave height, wave length
-			new Water(50, -13, 30, 15, 55);
-            new Water(45, -13, 32, 10, 50);
-            
-            newFish();
-            
-			for (var i = view.canvas.height; i > 0 ; i-=Math.floor(rand(10,35))) {
-				new Bubbles(rand(view.canvas.width-80,view.canvas.width-90), i, 8);	
-			}
-			
-            var canvasObject = document.getElementById("view");
-            canvasObject.addEventListener("click", newFish, false);
-
-			setInterval(main, 1000 / 40);
-            
-            function newFish(event) {
-				var length = rand(60, 200);
-                new Fish(rand(50,view.canvas.width*.7),
-                         rand(75,view.canvas.height-150),
-                         length,
-                         rand(length*.6, length*.9));
-            }
-
-            
-		</script>
 	</body>
 </html>
