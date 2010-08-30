@@ -13,15 +13,15 @@ Aquarium.prototype.prepare = function () {
     
     // Rocks on bottom of tank
     for (var i = 0; i < cw*10; i++) {
-        var xPos = rand(10, cw-10); 
-        var yPos = rand(ch-rand(65,72),ch-10); 
-        var size = rand(2,4);
+        var xPos = Utility.rand(10, cw-10); 
+        var yPos = Utility.rand(ch-Utility.rand(65,72),ch-10); 
+        var size = Utility.rand(2,4);
         
         var grad = ctx.createRadialGradient(
             xPos, yPos, 0,
             xPos, yPos, size);
-        var rc1 = "rgba("+Math.ceil(rand(90, 110))+","+Math.ceil(rand(50, 70))+",00,1)";
-        var rc2 = "rgba("+Math.ceil(rand(34, 54))+","+Math.ceil(rand(27, 47))+","+Math.ceil(rand(19, 39))+",1)";
+        var rc1 = "rgba("+Math.ceil(Utility.rand(90, 110))+","+Math.ceil(Utility.rand(50, 70))+",00,1)";
+        var rc2 = "rgba("+Math.ceil(Utility.rand(34, 54))+","+Math.ceil(Utility.rand(27, 47))+","+Math.ceil(Utility.rand(19, 39))+",1)";
 		grad.addColorStop(.4, rc1);
         grad.addColorStop(1, rc2);
             
@@ -136,7 +136,7 @@ function Bubbles(x, y, s, d) {
 	this.canvas.height = view.canvas.height;
     this.x = x;
     this.y = y;
-    this.s = rand(s*.9, s*1.1);
+    this.s = Utility.rand(s*.9, s*1.1);
     this.prepare();
     Bubbles.all.push(this);
 }
@@ -169,11 +169,11 @@ Bubbles.prototype.render = function(ctx) {
     var c = this.canvas;
     
 	if(this.y < 25) {
-		this.y = Math.floor(rand(view.canvas.height-20,view.canvas.height));
-		this.x = Math.floor(rand(view.canvas.width-80,view.canvas.width-90));
+		this.y = Math.floor(Utility.rand(view.canvas.height-20,view.canvas.height));
+		this.x = Math.floor(Utility.rand(view.canvas.width-80,view.canvas.width-90));
 	} else {
-		this.y = Math.floor(rand(this.y-2,this.y-5));
-		this.x = Math.floor(rand(this.x-1,this.x+2));
+		this.y = Math.floor(Utility.rand(this.y-2,this.y-5));
+		this.x = Math.floor(Utility.rand(this.x-1,this.x+2));
 	}
     ctx.drawImage(c, this.x , this.y);
 }

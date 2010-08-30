@@ -1,5 +1,7 @@
+function Utility(){
+}
 
-function rand(a, b) {
+Utility.prototype.rand = function(a, b) {
 	return Math.random() * (b - a) + a;
 }
 
@@ -54,7 +56,7 @@ function Fish(x, y, w, h) {
 	this.y = y;
 	this.w = w;
 	this.h = h;
-    this.s = rand(0, 3);
+    this.s = Utility.rand(0, 3);
 	this.d = 1;
     this.vertDir = 0;
     this.stopped = 0;
@@ -77,35 +79,35 @@ Fish.prototype._fingerprint = function() {
 	this.fingerprint = {
 		nx: this.w - h_space,							// Nose X
 		ny: this.h * .5,					// Nose Y
-		fb: this.w * rand(.3, .75),			// Front body bulge X
-		rb: this.w * rand(.15, .25),		// Rear body bulge X
-		f: this.h * rand(0, 0.35),			// Fat Y
+		fb: this.w * Utility.rand(.3, .75),			// Front body bulge X
+		rb: this.w * Utility.rand(.15, .25),		// Rear body bulge X
+		f: this.h * Utility.rand(0, 0.35),			// Fat Y
 		px: h_space,						// Tail point X
-		pt: this.h * rand(0.25, .75),		// Tail point distance
-		tc: this.h * rand(0, 0.4),			// Tail cut center size		
-		td: this.w * rand(0, .2),			// Tail depth		
-		grad: ~~rand(0, 5),
+		pt: this.h * Utility.rand(0.25, .75),		// Tail point distance
+		tc: this.h * Utility.rand(0, 0.4),			// Tail cut center size		
+		td: this.w * Utility.rand(0, .2),			// Tail depth		
+		grad: ~~Utility.rand(0, 5),
 		fins: []
 	};
 	var fin_space = this.w - this.fingerprint.rb;
-	for (var i = ~~rand(0, 5); i > 0; i--) {
+	for (var i = ~~Utility.rand(0, 5); i > 0; i--) {
 		var f = {
-			s: this.w - fin_space * rand(.1, .3),		// Start point
-			y: this.h * rand(0, 1),		// direction / multiplier
-			l: fin_space * rand(.2, .5)		// Length of each point
+			s: this.w - fin_space * Utility.rand(.1, .3),		// Start point
+			y: this.h * Utility.rand(0, 1),		// direction / multiplier
+			l: fin_space * Utility.rand(.2, .5)		// Length of each point
 		}
 		this.fingerprint.fins.push(f);
 	}
 	this.fingerprint.eye = {
-		h: this.h * rand(.04, .15),				// Eye height
+		h: this.h * Utility.rand(.04, .15),				// Eye height
 		x: this.w * .8,	// Eye X
-		s: this.h * rand(.05, .10) 			// Eye size
+		s: this.h * Utility.rand(.05, .10) 			// Eye size
 	};
 	this.fingerprint.pupil = {
-		s: this.fingerprint.eye.s * rand(.5, .8),				// Pupil size
-		a: rand(0, Math.PI * 2)				// Pupil angle
+		s: this.fingerprint.eye.s * Utility.rand(.5, .8),				// Pupil size
+		a: Utility.rand(0, Math.PI * 2)				// Pupil angle
 	};
-	this.fingerprint.pupil.o = (this.fingerprint.eye.s - this.fingerprint.pupil.s) * rand(.2, .5);	// Pupil offset from center
+	this.fingerprint.pupil.o = (this.fingerprint.eye.s - this.fingerprint.pupil.s) * Utility.rand(.2, .5);	// Pupil offset from center
 };
 Fish.prototype._draw_shape = function(c, ctx, b, frame) {
 	var angle = ((Math.PI * 2) / (Fish.frames)) * frame,
@@ -325,7 +327,7 @@ Fish.prototype.render = function(ctx, frame) {
         this.stopped = 1;
     }
     
-    if (this.stopped > 3 && rand(-2, 1) > 0) {
+    if (this.stopped > 3 && Utility.rand(-2, 1) > 0) {
         this.stopped = 0;
         c = this.canvas[frame];
     } else if (this.stopped > 0){
@@ -334,11 +336,11 @@ Fish.prototype.render = function(ctx, frame) {
     }
     
     if (frame == 2) {
-        if (this.y > 50 && this.y < view.canvas.height - 175) this.vertDir = rand(-1,1);
+        if (this.y > 50 && this.y < view.canvas.height - 175) this.vertDir = Utility.rand(-1,1);
         else if (this.y < 50) this.vertDir = 2;
         else this.vertDir = -2;
-        if (rand(-1, 1) > 0) this.s = rand(this.s-1, this.s+1);
-        if (rand(-1, 15) < 0) {
+        if (Utility.rand(-1, 1) > 0) this.s = Utility.rand(this.s-1, this.s+1);
+        if (Utility.rand(-1, 15) < 0) {
             this.d = (this.d == 1) ? 0 : 1;
             this.x = view.canvas.width - this.x - c.width;
             this.stopped = 1
