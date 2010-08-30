@@ -1,7 +1,7 @@
 function Utility(){
 }
 
-Utility.prototype.rand = function(a, b) {
+Utility.rand = function(a, b) {
 	return Math.random() * (b - a) + a;
 }
 
