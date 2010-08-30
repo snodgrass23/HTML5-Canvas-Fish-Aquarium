@@ -1,55 +1,4 @@
-function Utility(){
-}
-
-Utility.rand = function(a, b) {
-	return Math.random() * (b - a) + a;
-}
-
-function circle(ctx, x, y, r) {
-	ctx.beginPath();
-	ctx.arc(
-		x, y,
-		r, 0, Math.PI * 2,
-		false
-	);
-}
-
-// When precomputing, seems to lock transparency so you can't do this in the original sprites =(
-function glow(ctx, dist, color) {
-	ctx.shadowOffsetX = 0;
-	ctx.shadowOffsetY = 0;
-	ctx.shadowBlur = dist;
-	ctx.shadowColor = color;
-}
-
-function gcs(grad,p,r,g,b,a) {
-	grad.addColorStop(p, 'rgba('+r+','+g+','+b+','+a+')');
-}
-
-function ma(o,n) {
-    var fn = o ? o[n] : null;
-    if (typeof fn == 'undefined') return function () {}
-    return function () {return fn.apply(o, arguments)}
-}
-
-// !View
-function View(el_id) {
-	this.canvas = document.getElementById(el_id);
-	this.ctx = this.canvas.getContext('2d');
-	
-	var canvas = document.getElementById('view');
-	//canvas.width = window.innerWith || document.documentElement.clientWidth;
-	//canvas.height = window.innerHeight || document.documentElement.clientHeight;
-}
-View.prototype.resize = function(w, h) {
-	this.canvas.width = w;
-	this.canvas.height = h;
-};
-View.prototype.clear = function() {
-	this.canvas.width = this.canvas.width;
-}
-
-// !Fish
+﻿// !Fish
 
 function Fish(x, y, w, h) {
 	this.x = x;
@@ -145,7 +94,7 @@ Fish.prototype._draw_profile = function(c, ctx, b, frame) {
     ctx.save();
     ctx.translate(c.width* .15,0);
     ctx.scale(.2,1);
-    circle(ctx, c.width*.5, c.height * .5, this.h*.3);
+    Utility.circle(ctx, c.width*.5, c.height * .5, this.h*.3);
 	var grad = this._build_gradients(c, ctx, b);
     ctx.restore();
 	ctx.fillStyle = grad[b.grad];
@@ -188,12 +137,12 @@ Fish.prototype._draw_scales = function(canvas, target_ctx, b) {
 	ctx.strokeStyle = '#000';
 	for (var x = 0; x < c.width * 2 / scale_size; x += 1) {
 		for (var y = 0; y < c.height / scale_size; y += 1) {
-			circle(ctx,
+			Utility.circle(ctx,
 				x * scale_size * .5,
 				y * scale_size + scale_size * .5 * (x % 2),
 				scale_size * .5 - 1
 			);
-			glow(ctx, 3, '#000');		
+			Utility.glow(ctx, 3, '#000');		
 			var opacity = (1 - (Math.abs((y * scale_size) - c.height * .5) / (c.height * .5)) * 1.25);
 			opacity *= (1 - Math.abs((x * scale_size * .5) - c.width * .6) / (c.width * .7)) * 1.25;
 			ctx.fillStyle = 'rgba(255,255,255,' + opacity + ')';
@@ -224,76 +173,76 @@ Fish.prototype._build_gradients = function(c, ctx, b) {
 		0.64 * cw, 0.45 * ch, cw * .1,
 		0.5 * cw, 0.5 * ch, cw * .8
 	);
-	gcs(grad[0],0,255,204,0,.7)
-	gcs(grad[0],.25,230, 152, 0, .9)
-	gcs(grad[0],.8,146,62,0,1)
+	Utility.gcs(grad[0],0,255,204,0,.7)
+	Utility.gcs(grad[0],.25,230, 152, 0, .9)
+	Utility.gcs(grad[0],.8,146,62,0,1)
 
 	grad[1] = ctx.createRadialGradient(
 		0.64 * cw, 0.7 * ch, cw * .1,
 		0.5 * cw, 0.5 * ch, cw * .8
 	);
-	gcs(grad[1],.6,129,153,33,.9);
-	gcs(grad[1],.45,252,229,127,1);
-	gcs(grad[1],.3,232,135,20,.8);
-	gcs(grad[1],0,67,106,103,1);
+	Utility.gcs(grad[1],.6,129,153,33,.9);
+	Utility.gcs(grad[1],.45,252,229,127,1);
+	Utility.gcs(grad[1],.3,232,135,20,.8);
+	Utility.gcs(grad[1],0,67,106,103,1);
 
 	grad[2] = ctx.createLinearGradient(
 		0, ch * .45, cw, ch
 	);
-	gcs(grad[2],.3,254,186,18,.9)
-	gcs(grad[2],.32,0,0,0,.7);
-	gcs(grad[2],.35,255,255,255,.9);
-	gcs(grad[2],.43,255,255,255,.9);
-	gcs(grad[2],.45,0,0,0,.7);
-	gcs(grad[2],.47,254,186,18,.9);
-	gcs(grad[2],.55,254,186,18,.9);
-	gcs(grad[2],.57,0,0,0,.7);
-	gcs(grad[2],.60,255,255,255,.9);
-	gcs(grad[2],.62,255,255,255,.9);
-	gcs(grad[2],.64,0,0,0,.7);
-	gcs(grad[2],.66,254,186,18,.9);
+	Utility.gcs(grad[2],.3,254,186,18,.9)
+	Utility.gcs(grad[2],.32,0,0,0,.7);
+	Utility.gcs(grad[2],.35,255,255,255,.9);
+	Utility.gcs(grad[2],.43,255,255,255,.9);
+	Utility.gcs(grad[2],.45,0,0,0,.7);
+	Utility.gcs(grad[2],.47,254,186,18,.9);
+	Utility.gcs(grad[2],.55,254,186,18,.9);
+	Utility.gcs(grad[2],.57,0,0,0,.7);
+	Utility.gcs(grad[2],.60,255,255,255,.9);
+	Utility.gcs(grad[2],.62,255,255,255,.9);
+	Utility.gcs(grad[2],.64,0,0,0,.7);
+	Utility.gcs(grad[2],.66,254,186,18,.9);
 	
 	grad[3] = ctx.createRadialGradient(
 		0.8 * cw, ch, cw * .1,
 		0.8 * cw, ch, cw * .8
 	);
-	gcs(grad[3],0,255,255,255,.9);
-	gcs(grad[3],.65,128,128,128,.9);
-	gcs(grad[3],.7,0,0,0,.7);
-	gcs(grad[3],.75,255,255,255,.5);
-	gcs(grad[3],.8,255,255,255,.5);
-	gcs(grad[3],.95,128,128,128,.8);
+	Utility.gcs(grad[3],0,255,255,255,.9);
+	Utility.gcs(grad[3],.65,128,128,128,.9);
+	Utility.gcs(grad[3],.7,0,0,0,.7);
+	Utility.gcs(grad[3],.75,255,255,255,.5);
+	Utility.gcs(grad[3],.8,255,255,255,.5);
+	Utility.gcs(grad[3],.95,128,128,128,.8);
 	
 	grad[4] = ctx.createRadialGradient(
 		0.8 * cw, .5 * ch, cw * .1,
 		0.8 * cw, .5 * ch, cw * .6
 	);
-	gcs(grad[4],.3,200,0,0,.9);
-	gcs(grad[4],.4,255,100,0,.8);
-	gcs(grad[4],.75,255, 0,0,.9);
-	gcs(grad[4],1,200,0,0,.7);
+	Utility.gcs(grad[4],.3,200,0,0,.9);
+	Utility.gcs(grad[4],.4,255,100,0,.8);
+	Utility.gcs(grad[4],.75,255, 0,0,.9);
+	Utility.gcs(grad[4],1,200,0,0,.7);
 	return grad;
 }
 Fish.prototype._de = function(c, ctx, b, offset) {
 	var grad = ctx.createRadialGradient(
 		b.eye.x, c.height * .5 - b.eye.h, 0,
 		b.eye.x, c.height * .5 - b.eye.h, b.eye.s);
-	gcs(grad,.7,255,255,255,1);
-	gcs(grad,1,255,255,255,.5);
+	Utility.gcs(grad,.7,255,255,255,1);
+	Utility.gcs(grad,1,255,255,255,.5);
 		
 	ctx.fillStyle = grad;
-	circle(ctx, b.eye.x-offset, c.height * .5 - b.eye.h, b.eye.s);
-	glow(ctx, 5, 'rgba(0,0,0,.7)');
+	Utility.circle(ctx, b.eye.x-offset, c.height * .5 - b.eye.h, b.eye.s);
+	Utility.glow(ctx, 5, 'rgba(0,0,0,.7)');
 	ctx.fill();
-	glow(ctx, 0, '');
+	Utility.glow(ctx, 0, '');
 	
 	ctx.fillStyle = '#000';
-	circle(ctx, b.eye.x + Math.cos(b.pupil.a) * b.pupil.o-offset, c.height * .5 - b.eye.h + Math.sin(b.pupil.a) * b.pupil.o, b.pupil.s);
+	Utility.circle(ctx, b.eye.x + Math.cos(b.pupil.a) * b.pupil.o-offset, c.height * .5 - b.eye.h + Math.sin(b.pupil.a) * b.pupil.o, b.pupil.s);
 	ctx.fill();
 };
 Fish.prototype._draw_glow = function(c, ctx, b, frame) {
 	ctx.globalCompositeOperation = 'destination-over';
-	glow(ctx, 30, 'rgba(255,255,255,0.35)');		
+	Utility.glow(ctx, 30, 'rgba(255,255,255,0.35)');		
 	this._draw_shape(c, ctx, b, frame);
 	ctx.globalCompositeOperation = 'source-over';
 };
@@ -363,3 +312,4 @@ Fish.prototype.render = function(ctx, frame) {
     ctx.drawImage(c, this.x, this.y);
     ctx.restore();
 };
+

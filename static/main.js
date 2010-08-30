@@ -39,8 +39,8 @@ aquarium.prepare();
 new Water(50, -13, 30, 15, 55);
 new Water(45, -13, 32, 10, 50);
 
-for (var i = view.canvas.height; i > 0 ; i-=Math.floor(rand(10,35))) {
-	new Bubbles(rand(view.canvas.width-80,view.canvas.width-90), i, 8);	
+for (var i = view.canvas.height; i > 0 ; i-=Math.floor(Utility.rand(10,35))) {
+	new Bubbles(Utility.rand(view.canvas.width-80,view.canvas.width-90), i, 8);	
 }
 
 document.getElementById("view").addEventListener("click", requestFish, false);
@@ -54,9 +54,9 @@ function requestFish() {
 
 function newFish() {
     // x, y, length, width
-    length = rand(60, 200);
-    new Fish(rand(50,view.canvas.width*.7),
-             rand(75,view.canvas.height-150),
+    length = Utility.rand(60, 200);
+    new Fish(Utility.rand(50,view.canvas.width*.7),
+             Utility.rand(75,view.canvas.height-150),
              length,
-             rand(length*.6, length*.9));
+             Utility.rand(length*.6, length*.9));
 }
