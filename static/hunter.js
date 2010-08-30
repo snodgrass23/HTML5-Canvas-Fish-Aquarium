@@ -1,5 +1,36 @@
-// !View
 
+function rand(a, b) {
+	return Math.random() * (b - a) + a;
+}
+
+function circle(ctx, x, y, r) {
+	ctx.beginPath();
+	ctx.arc(
+		x, y,
+		r, 0, Math.PI * 2,
+		false
+	);
+}
+
+// When precomputing, seems to lock transparency so you can't do this in the original sprites =(
+function glow(ctx, dist, color) {
+	ctx.shadowOffsetX = 0;
+	ctx.shadowOffsetY = 0;
+	ctx.shadowBlur = dist;
+	ctx.shadowColor = color;
+}
+
+function gcs(grad,p,r,g,b,a) {
+	grad.addColorStop(p, 'rgba('+r+','+g+','+b+','+a+')');
+}
+
+function ma(o,n) {
+    var fn = o ? o[n] : null;
+    if (typeof fn == 'undefined') return function () {}
+    return function () {return fn.apply(o, arguments)}
+}
+
+// !View
 function View(el_id) {
 	this.canvas = document.getElementById(el_id);
 	this.ctx = this.canvas.getContext('2d');
@@ -115,8 +146,7 @@ Fish.prototype._draw_profile = function(c, ctx, b, frame) {
     circle(ctx, c.width*.5, c.height * .5, this.h*.3);
 	var grad = this._build_gradients(c, ctx, b);
     ctx.restore();
-	if (ctx.globalCompositeOperation2) ctx.fillStyle = "#FFF";
-	else ctx.fillStyle = grad[b.grad];
+	ctx.fillStyle = grad[b.grad];
 	ctx.fill();
     
 };
@@ -129,9 +159,9 @@ Fish.prototype._draw_fins = function(c, ctx, b, frame) {
 	for (var i in b.fins) {
 		var f = b.fins[i];
 		var grad = ctx.createLinearGradient(0.5 * c.width, 0, 0.5 * c.width, c.height);
-		grad.addColorStop(0, 'rgba(255,255,255,.25)');
-		grad.addColorStop(.5, 'rgba(255,255,255,.1)');
-		grad.addColorStop(1, 'rgba(255,255,255,.5)');
+		grad.addColorStop(0, 'rgba(255,255,255,.35)');
+		grad.addColorStop(.5, 'rgba(255,255,255,.2)');
+		grad.addColorStop(1, 'rgba(255,255,255,.6)');
 		ctx.fillStyle = grad;
 		ctx.beginPath();
 		ctx.moveTo(f.s, c.height * .5);
@@ -184,13 +214,11 @@ Fish.prototype._draw_colors = function(c, ctx, b) {
 	ctx.globalAlpha = 1;
 };
 Fish.prototype._build_gradients = function(c, ctx, b) {
-	var clg = ma(ctx, 'createLinearGradient');
-	var crg = ma(ctx, 'createRadialGradient');
 	var cw = c.width;
 	var ch = c.height;
 	var grad = [];
 
-	grad[0] = crg(
+	grad[0] = ctx.createRadialGradient(
 		0.64 * cw, 0.45 * ch, cw * .1,
 		0.5 * cw, 0.5 * ch, cw * .8
 	);
@@ -198,7 +226,7 @@ Fish.prototype._build_gradients = function(c, ctx, b) {
 	gcs(grad[0],.25,230, 152, 0, .9)
 	gcs(grad[0],.8,146,62,0,1)
 
-	grad[1] = crg(
+	grad[1] = ctx.createRadialGradient(
 		0.64 * cw, 0.7 * ch, cw * .1,
 		0.5 * cw, 0.5 * ch, cw * .8
 	);
@@ -207,7 +235,7 @@ Fish.prototype._build_gradients = function(c, ctx, b) {
 	gcs(grad[1],.3,232,135,20,.8);
 	gcs(grad[1],0,67,106,103,1);
 
-	grad[2] = clg(
+	grad[2] = ctx.createLinearGradient(
 		0, ch * .45, cw, ch
 	);
 	gcs(grad[2],.3,254,186,18,.9)
@@ -223,7 +251,7 @@ Fish.prototype._build_gradients = function(c, ctx, b) {
 	gcs(grad[2],.64,0,0,0,.7);
 	gcs(grad[2],.66,254,186,18,.9);
 	
-	grad[3] = crg(
+	grad[3] = ctx.createRadialGradient(
 		0.8 * cw, ch, cw * .1,
 		0.8 * cw, ch, cw * .8
 	);
@@ -234,7 +262,7 @@ Fish.prototype._build_gradients = function(c, ctx, b) {
 	gcs(grad[3],.8,255,255,255,.5);
 	gcs(grad[3],.95,128,128,128,.8);
 	
-	grad[4] = crg(
+	grad[4] = ctx.createRadialGradient(
 		0.8 * cw, .5 * ch, cw * .1,
 		0.8 * cw, .5 * ch, cw * .6
 	);
@@ -244,48 +272,21 @@ Fish.prototype._build_gradients = function(c, ctx, b) {
 	gcs(grad[4],1,200,0,0,.7);
 	return grad;
 }
-Fish.prototype._draw_eye = function(c, ctx, b, frame) {
-	var eye_grad = ctx.createRadialGradient(
+Fish.prototype._de = function(c, ctx, b, offset) {
+	var grad = ctx.createRadialGradient(
 		b.eye.x, c.height * .5 - b.eye.h, 0,
 		b.eye.x, c.height * .5 - b.eye.h, b.eye.s);
-	eye_grad.addColorStop(.7, 'rgba(255,255,255,1)');
-	eye_grad.addColorStop(1, 'rgba(255,255,255,.5)');
+	gcs(grad,.7,255,255,255,1);
+	gcs(grad,1,255,255,255,.5);
 		
-	ctx.fillStyle = eye_grad;
-	circle(ctx, b.eye.x, c.height * .5 - b.eye.h, b.eye.s);
+	ctx.fillStyle = grad;
+	circle(ctx, b.eye.x-offset, c.height * .5 - b.eye.h, b.eye.s);
 	glow(ctx, 5, 'rgba(0,0,0,.7)');
 	ctx.fill();
 	glow(ctx, 0, '');
 	
-	ctx.fillStyle = '#000000';
-	circle(ctx, b.eye.x + Math.cos(b.pupil.a) * b.pupil.o, c.height * .5 - b.eye.h + Math.sin(b.pupil.a) * b.pupil.o, b.pupil.s);
-	ctx.fill();
-};
-Fish.prototype._draw_eyes = function(c, ctx, b, frame) {
-	var eye_grad = ctx.createRadialGradient(
-		b.eye.x, c.height * .5 - b.eye.h, 0,
-		b.eye.x, c.height * .5 - b.eye.h, b.eye.s);
-	eye_grad.addColorStop(.7, 'rgba(255,255,255,1)');
-	eye_grad.addColorStop(1, 'rgba(255,255,255,.5)');
-		
-	ctx.fillStyle = eye_grad;
-	circle(ctx, b.eye.x-c.width/2, c.height * .5 - b.eye.h, b.eye.s);
-	glow(ctx, 5, 'rgba(0,0,0,.7)');
-	ctx.fill();
-	glow(ctx, 0, '');
-	
-	ctx.fillStyle = '#000000';
-	circle(ctx, b.eye.x + Math.cos(b.pupil.a) * b.pupil.o-c.width/2, c.height * .5 - b.eye.h + Math.sin(b.pupil.a) * b.pupil.o, b.pupil.s);
-	ctx.fill();
-    
-    ctx.fillStyle = eye_grad;
-	circle(ctx, b.eye.x-b.eye.s*2-c.width/2, c.height * .5 - b.eye.h, b.eye.s);
-	glow(ctx, 5, 'rgba(0,0,0,.7)');
-	ctx.fill();
-	glow(ctx, 0, '');
-	
-	ctx.fillStyle = '#000000';
-	circle(ctx, b.eye.x + Math.cos(b.pupil.a) * b.pupil.o-b.eye.s*2-c.width/2, c.height * .5 - b.eye.h + Math.sin(b.pupil.a) * b.pupil.o, b.pupil.s);
+	ctx.fillStyle = '#000';
+	circle(ctx, b.eye.x + Math.cos(b.pupil.a) * b.pupil.o-offset, c.height * .5 - b.eye.h + Math.sin(b.pupil.a) * b.pupil.o, b.pupil.s);
 	ctx.fill();
 };
 Fish.prototype._draw_glow = function(c, ctx, b, frame) {
@@ -295,27 +296,25 @@ Fish.prototype._draw_glow = function(c, ctx, b, frame) {
 	ctx.globalCompositeOperation = 'source-over';
 };
 Fish.prototype.prepare = function(frame) {
-	this.canvas[frame] = document.createElement('canvas');
+    this.canvas[frame] = document.createElement('canvas');
 	this.canvas[frame].width = this.w;
 	this.canvas[frame].height = this.h;
 	
 	var c = this.canvas[frame],
 		ctx = c.getContext('2d'),
 		b = this.fingerprint;
-    
     if (frame == Fish.frames) {
         this._draw_profile(c, ctx, b, frame);
-        this._draw_eyes(c, ctx, b, frame);
+        this._de(c, ctx, b,c.width/2);
+        this._de(c, ctx, b,b.eye.s*2+c.width/2);
     } else {
         this._draw_shape(c, ctx, b, frame);
         if (ctx.globalCompositeOperation) this._draw_scales(c, ctx, b);
         if (ctx.globalCompositeOperation) this._draw_colors(c, ctx, b);	
-        this._draw_fins(c, ctx, b, frame);
         if (ctx.globalCompositeOperation) this._draw_glow(c, ctx, b, frame);
-        this._draw_eye(c, ctx, b);
+        if (ctx.globalCompositeOperation) this._draw_fins(c, ctx, b, frame);
+        this._de(c, ctx, b,0);
     }
-    
-	
 };
 
 Fish.prototype.render = function(ctx, frame) {
@@ -362,38 +361,3 @@ Fish.prototype.render = function(ctx, frame) {
     ctx.drawImage(c, this.x, this.y);
     ctx.restore();
 };
-
-
-// !Utilities
-
-
-function rand(a, b) {
-	return Math.random() * (b - a) + a;
-}
-
-function circle(ctx, x, y, r) {
-	ctx.beginPath();
-	ctx.arc(
-		x, y,
-		r, 0, Math.PI * 2,
-		false
-	);
-}
-
-// When precomputing, seems to lock transparency so you can't do this in the original sprites =(
-function glow(ctx, dist, color) {
-	ctx.shadowOffsetX = 0;
-	ctx.shadowOffsetY = 0;
-	ctx.shadowBlur = dist;
-	ctx.shadowColor = color;
-}
-
-function gcs(grad,p,r,g,b,a) {
-	grad.addColorStop(p, 'rgba('+r+','+g+','+b+','+a+')');
-}
-
-function ma(o,n) {
-    var fn = o ? o[n] : null;
-    if (typeof fn == 'undefined') return function () {}
-    return function () {return fn.apply(o, arguments)}
-}
