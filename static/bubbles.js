@@ -1,6 +1,3 @@
-
-
-//Bubbles
 function Bubbles(x, y, s, d) {
     this.canvas = document.createElement('canvas');
 	this.canvas.width = view.canvas.width;

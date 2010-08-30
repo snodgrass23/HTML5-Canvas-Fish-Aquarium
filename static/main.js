@@ -6,6 +6,8 @@ function main() {
 	view.clear();
     for (var i in Water.all) Water.all[i].render(view.ctx);
     
+    plant.render(view.ctx);   
+    
     for (var i in Bubbles.all) Bubbles.all[i].render(view.ctx);
     
     frame = (frame + 1) % Fish.frames;
@@ -25,15 +27,20 @@ function main() {
         for (var i = 0; i < addFish; i++) newFish();
         addFish = 0;
     }
+    
+
 }
 
 
-var view,aquarium;
+var view,aquarium,plant;
 
 view = new View('view');	
 
 aquarium = new Aquarium(view.canvas.width,view.canvas.height);
 aquarium.prepare();
+
+plant = new Plant(view.canvas.width,view.canvas.height);
+plant.prepare();
 
 // frames, x offset, y offset, wave height, wave length
 new Water(50, -13, 30, 15, 55);
