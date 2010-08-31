@@ -3,14 +3,14 @@
 	this.canvas.width = view.canvas.width;
 	this.canvas.height = view.canvas.height;
 	this.x = ~~Utility.rand(15,475);
-	this.y = ~~Utility.rand(30,150);
+	this.y = ~~Utility.rand(245,255);
 	this.prepare();
     Plant.all.push(this);
 }
 Plant.all = [];
 Plant.prototype._draw_plant = function(c, ctx) {
 		 
-    var stemThickness = 5;
+    var stemThickness = 7;
             
 	ctx.strokeStyle = "#0A520A";
     ctx.lineWidth = stemThickness ;
@@ -18,9 +18,9 @@ Plant.prototype._draw_plant = function(c, ctx) {
 	var bottom = Math.floor(Utility.rand(view.canvas.height-20,view.canvas.height));
 	var xpos = this.x;
 	var top = this.y;
-	var curve = top-bottom/2
-	var randx1 = ~~Utility.rand(xpos+50,xpos)
-	var randx2 = ~~Utility.rand(xpos,xpos-50)
+	var curve = top-bottom
+	var randx1 = ~~Utility.rand(xpos+30,xpos)
+	var randx2 = ~~Utility.rand(xpos,xpos-30)
 	
 	ctx.moveTo(xpos,top);
 	
