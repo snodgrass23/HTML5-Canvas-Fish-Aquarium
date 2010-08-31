@@ -5,8 +5,8 @@ var addFish = 1;
 function main() {
 	view.clear();
     for (var i in Water.all) Water.all[i].render(view.ctx);
-    
-    plant.render(view.ctx);   
+   
+    for (var i in Plant.all) Plant.all[i].render(view.ctx);   
     
     for (var i in Bubbles.all) Bubbles.all[i].render(view.ctx);
     
@@ -27,24 +27,28 @@ function main() {
         for (var i = 0; i < addFish; i++) newFish();
         addFish = 0;
     }
-    
 
 }
 
 
-var view,aquarium,plant;
+var view,aquarium;
 
 view = new View('view');	
 
 aquarium = new Aquarium(view.canvas.width,view.canvas.height);
 aquarium.prepare();
 
-plant = new Plant(view.canvas.width,view.canvas.height);
-plant.prepare();
+//plant = new Plant(view.canvas.width,view.canvas.height);
+//plant.prepare();
 
 // frames, x offset, y offset, wave height, wave length
 new Water(50, -13, 30, 15, 55);
 new Water(45, -13, 32, 10, 50);
+
+new Plant();
+new Plant();
+new Plant();
+new Plant();
 
 for (var i = view.canvas.height; i > 0 ; i-=Math.floor(Utility.rand(10,35))) {
 	new Bubbles(Utility.rand(view.canvas.width-80,view.canvas.width-90), i, 8);	

@@ -1,31 +1,37 @@
-﻿function Plant(w, h) {
+﻿function Plant() {
 	this.canvas = document.createElement('canvas');
-	this.canvas.width = w;
-	this.canvas.height = h;
-    this.w= Utility.rand(w*.9, w*1.1);
+	this.canvas.width = view.canvas.width;
+	this.canvas.height = view.canvas.height;
+	this.x = Utility.rand(15,475);
+	this.y = Utility.rand(30,150);
+	this.prepare();
+    Plant.all.push(this);
 }
-Plant.prototype.prepare = function () {
-	var c = this.canvas,
-		ctx = c.getContext('2d');
+Plant.all = [];
+Plant.prototype._draw_plant = function(c, ctx) {
 		 
     var stemThickness = 5;
-	var cw = c.width;
-	var ch = c.height;
-    var offset = this.w+5;
-    var start = 250;
-    var end = 550;
-        
-    // stroke for main frame
+            
 	ctx.strokeStyle = "#0A520A";
     ctx.lineWidth = stemThickness ;
     ctx.beginPath();
-    ctx.moveTo(start,250); 
-    ctx.lineTo(start,end); 
+	bottom = Math.floor(Utility.rand(view.canvas.height-20,view.canvas.height));
+	xpos =	this.x;
+	top = this.y;
+    ctx.moveTo(xpos,top); 
+    ctx.lineTo(xpos,bottom); 
     ctx.stroke();
     
 	ctx.globalCompositeOperation = "source-atop";
-};
+}
+
+Plant.prototype.prepare = function () {  
+    var c = this.canvas,
+		ctx = c.getContext('2d');     
+    this._draw_plant(c, ctx);
+}
+
 Plant.prototype.render = function(ctx) {
 	var c = this.canvas;
-	ctx.drawImage(c, 10, 10, c.width, c.height);
-};
+	ctx.drawImage(c, this.x, this.y);
+}
