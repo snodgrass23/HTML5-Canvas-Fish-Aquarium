@@ -23,10 +23,10 @@ Plant.prototype._draw_plant = function(c, ctx) {
 	var randx2 = ~~Utility.rand(xpos+35,xpos-35);
 	var rleafx = randx1+ ~~Utility.rand(50,100);
 	var rleafy = top- ~~Utility.rand(40,100);
-	var rleafup = randx1+ ~~((rleafx-randx1)/4);
+	var rleafup = randx1+ ~~((rleafx-randx1)/3);
 	var rleafback = randx1;
 	var rleafcurveup = top;
-	var rleafcurveback = top- ~~((top-rleafy)/4);
+	var rleafcurveback = top- ~~((top-rleafy)/3);
 	
 	ctx.moveTo(xpos,bottom);
 	//ctx.bezierCurveTo(randx1,top-curve,randx2,top-(curve*2),randx1,bottom);	
@@ -34,9 +34,11 @@ Plant.prototype._draw_plant = function(c, ctx) {
 	ctx.stroke();
 	ctx.beginPath();
 	ctx.lineWidth = 1;
+	ctx.beginPath();
+	ctx.moveTo(randx1,top);
 	ctx.quadraticCurveTo(rleafup,rleafcurveup,rleafx,rleafy);
 	ctx.quadraticCurveTo(rleafback,rleafcurveback,randx1,top);
-	//ctx.fillStyle = "#0A520A";
+	ctx.fillStyle = "#0A520A";
 	ctx.fill();
 	//ctx.quadraticCurveTo(25,50,50,60);
 
