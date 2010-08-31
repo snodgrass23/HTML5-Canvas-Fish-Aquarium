@@ -16,10 +16,20 @@ Plant.prototype._draw_plant = function(c, ctx) {
     ctx.lineWidth = stemThickness ;
     ctx.beginPath();
 	var bottom = Math.floor(Utility.rand(view.canvas.height-20,view.canvas.height));
-	var xpos =	this.x;
+	var xpos = this.x;
 	var top = this.y;
-    ctx.moveTo(xpos,top); 
-    ctx.lineTo(xpos,bottom); 
+	var curve = top-bottom/2
+	var randx1 = ~~Utility.rand(xpos+50,xpos)
+	var randx2 = ~~Utility.rand(xpos,xpos-50)
+	
+	ctx.moveTo(xpos,top);
+	
+	
+	ctx.bezierCurveTo(randx1,top-curve,randx2,top-(curve*2),randx1,bottom);	
+	
+	
+    //ctx.moveTo(xpos,top); 
+    //ctx.lineTo(xpos,bottom); 
     ctx.stroke();
     
 	ctx.globalCompositeOperation = "source-atop";
@@ -34,4 +44,5 @@ Plant.prototype.prepare = function () {
 Plant.prototype.render = function(ctx) {
 	var c = this.canvas;
 	ctx.drawImage(c, this.x, this.y);
+	//ctx.drawImage(c, 200, 200);
 }
