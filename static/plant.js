@@ -32,6 +32,7 @@ Plant.prototype._draw_plant = function(c, ctx) {
 	//ctx.bezierCurveTo(randx1,top-curve,randx2,top-(curve*2),randx1,bottom);	
 	ctx.bezierCurveTo(randx1,bottom-curve,randx2,top-(curve*2),randx1,top);
 	ctx.stroke();
+	ctx.beginPath();
 	ctx.lineWidth = 1;
 	ctx.quadraticCurveTo(rleafup,rleafcurveup,rleafx,rleafy);
 	ctx.quadraticCurveTo(rleafback,rleafcurveback,randx1,top);
