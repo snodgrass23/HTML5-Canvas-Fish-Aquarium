@@ -2,8 +2,8 @@
 	this.canvas = document.createElement('canvas');
 	this.canvas.width = view.canvas.width;
 	this.canvas.height = view.canvas.height;
-	this.x = Utility.rand(15,475);
-	this.y = Utility.rand(30,150);
+	this.x = ~~Utility.rand(15,475);
+	this.y = ~~Utility.rand(30,150);
 	this.prepare();
     Plant.all.push(this);
 }
@@ -15,9 +15,9 @@ Plant.prototype._draw_plant = function(c, ctx) {
 	ctx.strokeStyle = "#0A520A";
     ctx.lineWidth = stemThickness ;
     ctx.beginPath();
-	bottom = Math.floor(Utility.rand(view.canvas.height-20,view.canvas.height));
-	xpos =	this.x;
-	top = this.y;
+	var bottom = Math.floor(Utility.rand(view.canvas.height-20,view.canvas.height));
+	var xpos =	this.x;
+	var top = this.y;
     ctx.moveTo(xpos,top); 
     ctx.lineTo(xpos,bottom); 
     ctx.stroke();
