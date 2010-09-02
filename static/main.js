@@ -6,6 +6,13 @@ function main() {
 	view.clear();
     for (var i in Water.all) Water.all[i].render(view.ctx);
    
+    for (var i in Fish.all) {
+        if (Fish.all[i].z == 1) {
+        	if(all_stopped > 0) Fish.all[i].render(view.ctx, Fish.frames);
+        	else Fish.all[i].render(view.ctx, frame);	
+        }
+    }
+    
     for (var i in Plant.all) 
     	if(Plant.all[i].z == 1) Plant.all[i].render(view.ctx);
     
@@ -14,13 +21,22 @@ function main() {
     frame = (frame + 1) % Fish.frames;
     
     for (var i in Fish.all) {
-        if(all_stopped > 0) Fish.all[i].render(view.ctx, Fish.frames);
-        else Fish.all[i].render(view.ctx, frame);
+        if (Fish.all[i].z == 2) {
+        	if(all_stopped > 0) Fish.all[i].render(view.ctx, Fish.frames);
+        	else Fish.all[i].render(view.ctx, frame);	
+        }
     }
     
     for (var i in Plant.all) 
     	if(Plant.all[i].z == 2) Plant.all[i].render(view.ctx);
     
+    for (var i in Fish.all) {
+        if (Fish.all[i].z == 3) {
+        	if(all_stopped > 0) Fish.all[i].render(view.ctx, Fish.frames);
+        	else Fish.all[i].render(view.ctx, frame);	
+        }
+    }	
+    	
     aquarium.render(view.ctx);
     if (all_stopped > 0) all_stopped++
     if (all_stopped > 100) all_stopped = 0
@@ -50,6 +66,8 @@ aquarium.prepare();
 new Water(50, -13, 30, 15, 55);
 new Water(45, -13, 32, 10, 50);
 
+new Plant(1);
+new Plant(1);
 new Plant(1);
 new Plant(1);
 new Plant(2);
