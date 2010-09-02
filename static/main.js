@@ -6,7 +6,7 @@ function main() {
 	view.clear();
     for (var i in Water.all) Water.all[i].render(view.ctx);
    
-    for (var i in Plant.all) Plant.all[i].render(view.ctx);   
+    for (var i in Plant.all) Plant.all[i].render(view.ctx);
     
     for (var i in Bubbles.all) Bubbles.all[i].render(view.ctx);
     
@@ -27,6 +27,7 @@ function main() {
         for (var i = 0; i < addFish; i++) newFish();
         addFish = 0;
     }
+       
 
 }
 
