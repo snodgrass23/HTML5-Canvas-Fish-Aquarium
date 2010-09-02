@@ -1,9 +1,10 @@
-﻿function Plant() {
+﻿function Plant(z) {
 	this.canvas = document.createElement('canvas');
 	this.canvas.width = view.canvas.width;
 	this.canvas.height = view.canvas.height;
 	this.x = ~~Utility.rand(25,475);
 	this.y = ~~Utility.rand(245,255);
+	this.z = z;
 	this.w = ~~Utility.rand(this.x-35,this.x);
 	this.prepare();
     Plant.all.push(this);
