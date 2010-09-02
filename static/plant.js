@@ -27,35 +27,37 @@ Plant.prototype._draw_plant = function(c, ctx) {
 	ctx.bezierCurveTo(randx1,bottom-curve,randx2,top-(curve*2),randx1,top);
 	ctx.stroke();
     
-	ctx.globalCompositeOperation = "source-atop";
+	ctx.globalCompositeOperation = "source-over";
 }
 
 Plant.prototype._draw_leaf = function(c,ctx)	{
 	
 	ctx.lineWidth = 1;
 	ctx.beginPath();
-		var randx1 = this.w;
-		var top = this.y;
 	
-		var rleafx = randx1+ ~~Utility.rand(50,100);
-		var rleafy = top- ~~Utility.rand(40,100);
-		var rleafup = randx1+ ~~((rleafx-randx1)/3);
-		var rleafback = randx1;
-		var rleafcurveup = top;
-		var rleafcurveback = top- ~~((top-rleafy)/3);
+	var randx1 = this.w;
+	var top = this.y;
+	
+	var rleafx = randx1+ ~~Utility.rand(50,100);
+	var rleafy = top- ~~Utility.rand(40,100);
+	var rleafup = randx1+ ~~((rleafx-randx1)/3);
+	var rleafback = randx1;
+	var rleafcurveup = top;
+	var rleafcurveback = top- ~~((top-rleafy)/3);
 	
 
-	ctx.moveTo(randx1,top);	
+	ctx.moveTo(randx1,top);
+	
 	ctx.quadraticCurveTo(rleafup,rleafcurveup,rleafx,rleafy);
 	ctx.quadraticCurveTo(rleafback,rleafcurveback,randx1,top);
 	
-	//ctx.fillStyle = "#003300";
-	//ctx.fill();
+	ctx.fillStyle = "#003300";
+	ctx.fill();
 	
 	ctx.strokeStyle = "#0A520A";
 	ctx.stroke();
 
-	//ctx.globalCompositeOperation = "source-atop";
+	ctx.globalCompositeOperation = "source-over";
 }
 
 Plant.prototype.prepare = function () {  
