@@ -3,6 +3,7 @@
 function Fish(x, y, w, h) {
 	this.x = x;
 	this.y = y;
+	this.z = ~~Utility.rand(1, 3.9);
 	this.w = w;
 	this.h = h;
     this.s = Utility.rand(0, 3);
