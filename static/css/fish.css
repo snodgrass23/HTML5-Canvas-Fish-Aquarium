@@ -1,9 +1,9 @@
 html {
-    background:#FFF;
+    background:#d9ffd9;
 }
 body {
     margin: 10px auto;
-    background: #FFF;
+    background: transparent;
     width:1040px;
     color:#333;
     font-family: 'Reenie Beanie', arial, serif;
@@ -17,7 +17,7 @@ body {
     padding:10px;
 }
 #tank {
-    background:#dfeeff;
+    background:transparent;
     height:600px;
     position:relative;
     margin-top:55px;
@@ -77,6 +77,13 @@ body {
     -moz-transform-origin: 0% 0%;
     -webkit-transform:rotate(-9deg);
     -webkit-transform-origin: 0% 0%;
+}
+#tank_hanger {
+    background:transparent;
+    overflow:hidden;
+    width:1000px;
+    height:295px;
+    position: absolute;
 }
 #tank_string {
     position:absolute;
