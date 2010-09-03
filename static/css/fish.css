@@ -1,5 +1,6 @@
 html {
-    background:#FFF;}
+    background:#FFF;
+}
 body {
     margin: 10px auto;
     background: #FFF;
@@ -7,20 +8,46 @@ body {
     color:#333;
     font-family: 'Reenie Beanie', arial, serif;
     font-size:14px;
-    text-align:center;}
-h1 {
-    font-size:48px;}
+    text-align:center;
+}
 #container {
-    background:#FFF;
+    background:transparent;
     position:relative;
     margin:10px;
-    padding:10px;}
+    padding:10px;
+}
 #tank {
     background:#dfeeff;
     height:600px;
     position:relative;
+    margin-top:55px;
     -moz-box-shadow:0px 0px 15px #000;
-    -webkit-box-shadow:0px 0px 15px #000;}
+    -webkit-box-shadow:0px 0px 15px #000;
+}
+#tank h1 {
+    font-size:36px;
+    position:absolute;
+    top:25px;
+    right:25px;
+    text-align:right;
+    -moz-transform: rotate(1deg);
+    -moz-transform-origin: 0% 0%;
+    -webkit-transform:rotate(1deg);
+    -webkit-transform-origin: 0% 0%;
+}
+#tank_tape {
+    position:absolute;
+    background:#f9e1ac;
+    opacity:.6;
+    height:50px;
+    width:350px;
+    top:45px;
+    right:20px;
+    -moz-transform: rotate(2deg);
+    -moz-transform-origin: 0% 0%;
+    -webkit-transform:rotate(2deg);
+    -webkit-transform-origin: 0% 0%;
+}
 #tank_label {
     position:absolute;
     background:yellow;
@@ -35,7 +62,8 @@ h1 {
     -webkit-transform:rotate(-10deg);
     -webkit-transform-origin: 0% 0%;
     -moz-box-shadow:2px 2px 5px #666;
-    -webkit-box-shadow:2px 2px 5px #666;}
+    -webkit-box-shadow:2px 2px 5px #666;
+}
 #tank_label_tape {
     position:absolute;
     background:#999;
@@ -48,4 +76,31 @@ h1 {
     -moz-transform: rotate(-9deg);
     -moz-transform-origin: 0% 0%;
     -webkit-transform:rotate(-9deg);
-    -webkit-transform-origin: 0% 0%;}
+    -webkit-transform-origin: 0% 0%;
+}
+#tank_string {
+    position:absolute;
+    top:297px;
+    left:200px;
+    height:400px;
+    width:400px;
+    background:transparent;
+    border:2px solid #999;
+    -moz-transform: rotate(-45deg);
+    -moz-transform-origin: 0% 0%;
+    -webkit-transform:rotate(-45deg);
+    -webkit-transform-origin: 0% 0%;
+    -moz-border-radius:15px;
+    -webkit-border-radius:15px;
+}
+#tank_string_nail {
+    position:absolute;
+    top:15px;
+    left:480px;
+    background:#666;
+    border:1px solid #000;
+    height:10px;
+    width:10px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+}
