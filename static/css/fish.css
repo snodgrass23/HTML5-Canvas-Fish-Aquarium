@@ -1,2 +1,51 @@
-body {margin: 10px auto;background: #000;width:1000px;color:#fff;text-align:center;} 
-div {background:#dfeeff;height:600px;}
+html {
+    background:#FFF;}
+body {
+    margin: 10px auto;
+    background: #FFF;
+    width:1040px;
+    color:#333;
+    font-family: 'Reenie Beanie', arial, serif;
+    font-size:14px;
+    text-align:center;}
+h1 {
+    font-size:48px;}
+#container {
+    background:#FFF;
+    position:relative;
+    margin:10px;
+    padding:10px;}
+#tank {
+    background:#dfeeff;
+    height:600px;
+    position:relative;
+    -moz-box-shadow:0px 0px 15px #000;
+    -webkit-box-shadow:0px 0px 15px #000;}
+#tank_label {
+    position:absolute;
+    background:yellow;
+    height:100px;
+    width:150px;
+    padding:10px;
+    font-size:30px;
+    top:50px;
+    left:50px;
+    -moz-transform: rotate(-10deg);
+    -moz-transform-origin: 0% 0%;
+    -webkit-transform:rotate(-10deg);
+    -webkit-transform-origin: 0% 0%;
+    -moz-box-shadow:2px 2px 5px #666;
+    -webkit-box-shadow:2px 2px 5px #666;}
+#tank_label_tape {
+    position:absolute;
+    background:#999;
+    opacity:.3;
+    height:20px;
+    width:50px;
+    top:35px;
+    left:90px;
+    z-index:999;
+    -moz-transform: rotate(-9deg);
+    -moz-transform-origin: 0% 0%;
+    -webkit-transform:rotate(-9deg);
+    -webkit-transform-origin: 0% 0%;}
