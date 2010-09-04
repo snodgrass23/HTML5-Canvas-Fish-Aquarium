@@ -15,8 +15,8 @@
 Water.all = [];
 Water.prototype._draw_water = function(c, ctx) {
  	
-    ctx.globalAlpha = .7;
-    ctx.strokeStyle = "#61afef";
+    ctx.globalAlpha = .4;
+    ctx.strokeStyle = "#157dd2";
     ctx.lineWidth = 3;
     for(var i = this.x; i < c.width; i += this.w) {
         ctx.moveTo(i, this.y);

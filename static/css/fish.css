@@ -1,5 +1,5 @@
 html {
-    background:#d9ffd9;
+    background:transparent url(../img/wall.jpg) repeat-x;
 }
 body {
     margin: 10px auto;
@@ -20,9 +20,13 @@ body {
     background:transparent;
     height:600px;
     position:relative;
-    margin-top:55px;
+    margin-top:65px;
     -moz-box-shadow:0px 0px 15px #000;
     -webkit-box-shadow:0px 0px 15px #000;
+    -moz-transform: rotate(-1deg);
+    -moz-transform-origin: 0% 0%;
+    -webkit-transform:rotate(-1deg);
+    -webkit-transform-origin: 0% 0%;
 }
 #tank h1 {
     font-size:36px;
@@ -82,20 +86,24 @@ body {
     background:transparent;
     overflow:hidden;
     width:1000px;
-    height:295px;
+    height:75px;
     position: absolute;
+    -moz-transform: rotate(-1deg);
+    -moz-transform-origin: 0% 0%;
+    -webkit-transform:rotate(-1deg);
+    -webkit-transform-origin: 0% 0%;
 }
 #tank_string {
     position:absolute;
-    top:297px;
-    left:200px;
+    top:282px;
+    left:186px;
     height:400px;
     width:400px;
     background:transparent;
-    border:2px solid #999;
-    -moz-transform: rotate(-45deg);
+    border:2px solid #333;
+    -moz-transform: rotate(-42deg);
     -moz-transform-origin: 0% 0%;
-    -webkit-transform:rotate(-45deg);
+    -webkit-transform:rotate(-42deg);
     -webkit-transform-origin: 0% 0%;
     -moz-border-radius:15px;
     -webkit-border-radius:15px;
@@ -104,7 +112,7 @@ body {
     position:absolute;
     top:15px;
     left:480px;
-    background:#666;
+    background:#444;
     border:1px solid #000;
     height:10px;
     width:10px;
