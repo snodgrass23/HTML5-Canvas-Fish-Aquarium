@@ -11,7 +11,8 @@
 	for (var i = 0; i < Plant.frames; i++) {
 		this.prepare(i);
 	}
-    this.prepare(Plant.frames);
+    // Don't need, I only did this with Fish to build extra "profile" frame
+	// this.prepare(Plant.frames);
 	
 	Plant.all.push(this);
 }
@@ -72,14 +73,14 @@ Plant.prototype._draw_leaf = function(c,ctx)	{
 Plant.prototype.prepare = function (frame) {
 	
     this.canvas[frame] = document.createElement('canvas');
-	this.canvas[frame].width = this.w;
-	this.canvas[frame].height = this.h;
+	this.canvas[frame].width = view.canvas.width;
+	this.canvas[frame].height = view.canvas.height;
 	
 	var c = this.canvas[frame],
 	ctx = c.getContext('2d');
 	 
-    this._draw_plant(c, ctx, this.canvas[frame].width , this.canvas[frame].height);
-    this._draw_leaf(c, ctx, this.canvas[frame].width , this.canvas[frame].height);
+    this._draw_plant(c, ctx, c.width , c.height);
+    this._draw_leaf(c, ctx, c.width , c.height);
     //this._draw_leaf(c, ctx);
     //this._draw_leaf(c, ctx);
 }

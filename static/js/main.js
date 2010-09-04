@@ -19,8 +19,6 @@ function main() {
     
     for (var i in Bubbles.all) Bubbles.all[i].render(view.ctx);
     
-    frame = (frame + 1) % Fish.frames;
-    
     for (var i in Fish.all) {
         if (Fish.all[i].z == 2) {
         	if(all_stopped > 0) Fish.all[i].render(view.ctx, Fish.frames);
@@ -49,6 +47,7 @@ function main() {
         addFish = 0;
     }
     
+    frame = (frame + 1) % Fish.frames;
     pframe = (pframe + 1) % Plant.frames;
        
 
