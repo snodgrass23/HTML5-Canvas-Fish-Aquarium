@@ -1,4 +1,5 @@
 var frame = 0;
+var pframe = 0;
 var overall_frames = 0;
 var all_stopped = 0;
 var addFish = 1;
@@ -14,7 +15,7 @@ function main() {
     }
     
     for (var i in Plant.all) 
-    	if(Plant.all[i].z == 1) Plant.all[i].render(view.ctx);
+    	if(Plant.all[i].z == 1) Plant.all[i].render(view.ctx, pframe);
     
     for (var i in Bubbles.all) Bubbles.all[i].render(view.ctx);
     
@@ -28,7 +29,7 @@ function main() {
     }
     
     for (var i in Plant.all) 
-    	if(Plant.all[i].z == 2) Plant.all[i].render(view.ctx);
+    	if(Plant.all[i].z == 2) Plant.all[i].render(view.ctx, pframe);
     
     for (var i in Fish.all) {
         if (Fish.all[i].z == 3) {
@@ -47,6 +48,8 @@ function main() {
         for (var i = 0; i < addFish; i++) newFish();
         addFish = 0;
     }
+    
+    pframe = (pframe + 1) % Plant.frames;
        
 
 }
@@ -67,12 +70,12 @@ new Water(50, -13, 30, 15, 55);
 new Water(45, -13, 32, 10, 50);
 
 new Plant(1);
-new Plant(1);
-new Plant(1);
-new Plant(1);
-new Plant(2);
-new Plant(2);
-new Plant(2);
+//new Plant(1);
+//new Plant(1);
+//new Plant(1);
+//new Plant(2);
+//new Plant(2);
+//new Plant(2);
 
 for (var i = view.canvas.height; i > 0 ; i-=Math.floor(Utility.rand(10,35))) {
 	new Bubbles(Utility.rand(view.canvas.width-80,view.canvas.width-90), i, 8);	

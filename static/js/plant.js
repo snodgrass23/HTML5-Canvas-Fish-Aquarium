@@ -1,16 +1,23 @@
 ﻿function Plant(z) {
-	this.canvas = document.createElement('canvas');
-	this.canvas.width = view.canvas.width;
-	this.canvas.height = view.canvas.height;
-	this.x = ~~Utility.rand(15,this.canvas.width-15);
-	this.y = ~~Utility.rand(this.canvas.height-100,this.canvas.height-150);
+	//this.canvas = document.createElement('canvas');
+	//this.canvas.width = view.canvas.width;
+	//this.canvas.height = view.canvas.height;
+	this.x = ~~Utility.rand(15,view.canvas.width-15);
+	this.y = ~~Utility.rand(view.canvas.height-100,view.canvas.height-150);
 	this.z = ~~Utility.rand(1, 2.9);
 	this.w = ~~Utility.rand(this.x-35,this.x);
-	this.prepare();
-    Plant.all.push(this);
+	this.canvas = [];
+	
+	for (var i = 0; i < Plant.frames; i++) {
+		this.prepare(i);
+	}
+    this.prepare(Plant.frames);
+	
+	Plant.all.push(this);
 }
+Plant.frames = 2;
 Plant.all = [];
-Plant.prototype._draw_plant = function(c, ctx) {
+Plant.prototype._draw_plant = function(c, ctx, w, h) {
 		 
     var stemThickness = 7;
             
@@ -18,7 +25,7 @@ Plant.prototype._draw_plant = function(c, ctx) {
 	var lineCap = 'round'; 
     ctx.lineWidth = stemThickness ;
     ctx.beginPath();
-	var bottom = Math.floor(Utility.rand(view.canvas.height-20,view.canvas.height));
+	var bottom = Math.floor(Utility.rand(h-20,h));
 	var xpos = this.x;
 	var top = this.y;
 	var randx1 = this.w;
@@ -62,17 +69,23 @@ Plant.prototype._draw_leaf = function(c,ctx)	{
 	ctx.globalCompositeOperation = "source-over";
 }
 
-Plant.prototype.prepare = function () {  
-    var c = this.canvas,
-		ctx = c.getContext('2d');     
-    this._draw_plant(c, ctx);
-    this._draw_leaf(c, ctx);
-    this._draw_leaf(c, ctx);
-    this._draw_leaf(c, ctx);
+Plant.prototype.prepare = function (frame) {
+	
+    this.canvas[frame] = document.createElement('canvas');
+	this.canvas[frame].width = this.w;
+	this.canvas[frame].height = this.h;
+	
+	var c = this.canvas[frame],
+	ctx = c.getContext('2d');
+	 
+    this._draw_plant(c, ctx, this.canvas[frame].width , this.canvas[frame].height);
+    this._draw_leaf(c, ctx, this.canvas[frame].width , this.canvas[frame].height);
+    //this._draw_leaf(c, ctx);
+    //this._draw_leaf(c, ctx);
 }
 
-Plant.prototype.render = function(ctx) {
-	var c = this.canvas;
+Plant.prototype.render = function(ctx, frame) {
+	var c = this.canvas[frame];
 	//ctx.drawImage(c, this.x, this.y);
 	ctx.drawImage(c, 0, 0);
 }
