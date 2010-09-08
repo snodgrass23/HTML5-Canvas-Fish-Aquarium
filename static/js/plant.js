@@ -5,8 +5,10 @@
 	this.x = ~~Utility.rand(15,view.canvas.width-15);
 	this.y = ~~Utility.rand(view.canvas.height-100,view.canvas.height-150);
 	this.z = ~~Utility.rand(1, 2.9);
-	this.w = ~~Utility.rand(this.x-35,this.x);
+	this.h = view.canvas.height;
 	this.canvas = [];
+	
+	this._fingerprint(this.h);
 	
 	for (var i = 0; i < Plant.frames; i++) {
 		this.prepare(i);
@@ -16,50 +18,78 @@
 	
 	Plant.all.push(this);
 }
-Plant.frames = 2;
+Plant.frames = 10;
 Plant.all = [];
-Plant.prototype._draw_plant = function(c, ctx, w, h) {
+
+
+Plant.prototype._fingerprint = function(h) {
+	this.main = {
+		bottom: Math.floor(Utility.rand(h-20,h)),
+		xpos: this.x,
+		top: this.y
+				
+	}
+	
+	this.stem = {
+		stemThickness: 7,
+		randx1: ~~Utility.rand(this.main.xpos-35,this.main.xpos),
+		randx2: ~~Utility.rand(this.main.xpos+35,this.main.xpos),
+		curve: this.main.top-this.main.bottom
+	}
+	
+	this.leaf1 = {
+		rleafx: this.stem.randx1+ ~~Utility.rand(-100,100),
+		rleafy: this.main.top- ~~Utility.rand(100, 400),
+		rleafcurveup: this.main.top
+	
+	}
+	
+	this.leaf2 = {
+		rleafup: this.stem.randx1+ ~~((this.leaf1.rleafx-this.stem.randx1)/7),
+		rleafback: this.stem.randx1,		
+		rleafcurveback:this.main.top- ~~((this.main.top-this.leaf1.rleafy)/6)
+	}
+	
+	
+}
+
+Plant.prototype._draw_plant = function(c, ctx, w, h, m, s) {
 		 
-    var stemThickness = 7;
             
 	ctx.strokeStyle = "#0A520A";
 	var lineCap = 'round'; 
-    ctx.lineWidth = stemThickness ;
-    ctx.beginPath();
-	var bottom = Math.floor(Utility.rand(h-20,h));
-	var xpos = this.x;
-	var top = this.y;
-	var randx1 = this.w;
-	var randx2 = ~~Utility.rand(xpos+35,xpos);
-	var curve = top-bottom;
+	ctx.lineWidth = s.stemThickness ;
+	ctx.beginPath();
 	
-	ctx.moveTo(xpos,bottom);
-	ctx.bezierCurveTo(randx1,bottom-curve,randx2,top-(curve*2),randx1,top);
+	ctx.moveTo(m.xpos,m.bottom);
+	ctx.bezierCurveTo(s.randx1,m.bottom-s.curve,s.randx2,m.top-(s.curve*2),s.randx1,m.top);
 	ctx.stroke();
     
 	ctx.globalCompositeOperation = "source-over";
 }
 
-Plant.prototype._draw_leaf = function(c,ctx)	{
+
+Plant.prototype._draw_leaf = function(c, ctx, m, s, l1, l2, frame)	{
 	
 	ctx.lineWidth = 1;
 	ctx.beginPath();
 	
-	var randx1 = this.w;
-	var top = this.y;
+	ctx.moveTo(s.randx1,m.top);
 	
-	var rleafx = randx1+ ~~Utility.rand(-100,100);
-	var rleafy = top- ~~Utility.rand(100, 400);
-	var rleafup = randx1+ ~~((rleafx-randx1)/7);
-	var rleafback = randx1;
-	var rleafcurveup = top;
-	var rleafcurveback = top- ~~((top-rleafy)/6);
-	
+	var framerev = frame;
 
-	ctx.moveTo(randx1,top);
 	
-	ctx.quadraticCurveTo(rleafup,rleafcurveup,rleafx,rleafy);
-	ctx.quadraticCurveTo(rleafback,rleafcurveback,randx1,top);
+	if (frame<5)	{
+		framerev = frame;
+
+	}
+	else	{
+		framerev = 10-frame;
+
+	}
+	
+	ctx.quadraticCurveTo(l2.rleafup,l1.rleafcurveup,l1.rleafx+(framerev),l1.rleafy+(framerev/4));
+	ctx.quadraticCurveTo(l2.rleafback,l2.rleafcurveback,s.randx1,m.top);
 	
 	ctx.fillStyle = "#003300";
 	ctx.fill();
@@ -78,11 +108,15 @@ Plant.prototype.prepare = function (frame) {
 	
 	var c = this.canvas[frame],
 	ctx = c.getContext('2d');
+	var m = this.main;
+	var s = this.stem;
+	var l1 = this.leaf1;
+	var l2 = this.leaf2;
 	 
-    this._draw_plant(c, ctx, c.width , c.height);
-    this._draw_leaf(c, ctx, c.width , c.height);
-    //this._draw_leaf(c, ctx);
-    //this._draw_leaf(c, ctx);
+    this._draw_plant(c, ctx, c.width , c.height, m, s);
+    this._draw_leaf(c, ctx, m, s, l1, l2, frame);
+    //this._draw_leaf(c, ctx, m, s, l1, l2);
+    //this._draw_leaf(c, ctx, m, s, l1, l2);
 }
 
 Plant.prototype.render = function(ctx, frame) {
