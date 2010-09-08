@@ -18,7 +18,7 @@
 	
 	Plant.all.push(this);
 }
-Plant.frames = 10;
+Plant.frames = 40;
 Plant.all = [];
 
 
@@ -40,14 +40,26 @@ Plant.prototype._fingerprint = function(h) {
 	this.leaf1 = {
 		rleafx: this.stem.randx1+ ~~Utility.rand(-100,100),
 		rleafy: this.main.top- ~~Utility.rand(100, 400),
-		rleafcurveup: this.main.top
+		rleafcurveup: this.main.top,
+		rleafx2: this.stem.randx1+ ~~Utility.rand(-100,100),
+		rleafy2: this.main.top- ~~Utility.rand(100, 400),
+		rleafcurveup2: this.main.top,
+		rleafx3: this.stem.randx1+ ~~Utility.rand(-100,100),
+		rleafy3: this.main.top- ~~Utility.rand(100, 400),
+		rleafcurveup3: this.main.top
 	
 	}
 	
 	this.leaf2 = {
 		rleafup: this.stem.randx1+ ~~((this.leaf1.rleafx-this.stem.randx1)/7),
 		rleafback: this.stem.randx1,		
-		rleafcurveback:this.main.top- ~~((this.main.top-this.leaf1.rleafy)/6)
+		rleafcurveback:this.main.top- ~~((this.main.top-this.leaf1.rleafy)/6),
+		rleafup2: this.stem.randx1+ ~~((this.leaf1.rleafx-this.stem.randx1)/7),
+		rleafback2: this.stem.randx1,		
+		rleafcurveback2:this.main.top- ~~((this.main.top-this.leaf1.rleafy)/6),
+		rleafup3: this.stem.randx1+ ~~((this.leaf1.rleafx-this.stem.randx1)/7),
+		rleafback3: this.stem.randx1,		
+		rleafcurveback3:this.main.top- ~~((this.main.top-this.leaf1.rleafy)/6)
 	}
 	
 	
@@ -78,18 +90,25 @@ Plant.prototype._draw_leaf = function(c, ctx, m, s, l1, l2, frame)	{
 	
 	var framerev = frame;
 
-	
-	if (frame<5)	{
+	//if (frame % 2 == 0){
+	   if (frame<20)	{
 		framerev = frame;
 
-	}
-	else	{
-		framerev = 10-frame;
+	   }
+	   else	{
+		framerev = 40-frame;
 
-	}
+	   }
+	//}
 	
-	ctx.quadraticCurveTo(l2.rleafup,l1.rleafcurveup,l1.rleafx+(framerev),l1.rleafy+(framerev/4));
-	ctx.quadraticCurveTo(l2.rleafback,l2.rleafcurveback,s.randx1,m.top);
+	ctx.quadraticCurveTo(l2.rleafup-(~~framerev/2),l1.rleafcurveup-(~~framerev/6),l1.rleafx+(~~framerev/2),l1.rleafy+(~~framerev/6));
+	ctx.quadraticCurveTo(l2.rleafback-(~~framerev/2),l2.rleafcurveback-(~~framerev/6),s.randx1,m.top);
+	
+	ctx.quadraticCurveTo(l2.rleafup2-(~~framerev/2),l1.rleafcurveup2-(~~framerev/6),l1.rleafx2+(~~framerev/3),l1.rleafy2+(~~framerev/8));
+	ctx.quadraticCurveTo(l2.rleafback2-(~~framerev/2),l2.rleafcurveback2-(~~framerev/6),s.randx1,m.top);
+	
+	ctx.quadraticCurveTo(l2.rleafup3-(~~framerev/2),l1.rleafcurveup3-(~~framerev/6),l1.rleafx3+(~~framerev/3),l1.rleafy3+(~~framerev/8));
+	ctx.quadraticCurveTo(l2.rleafback3-(~~framerev/2),l2.rleafcurveback3-(~~framerev/6),s.randx1,m.top);
 	
 	ctx.fillStyle = "#003300";
 	ctx.fill();
@@ -115,8 +134,7 @@ Plant.prototype.prepare = function (frame) {
 	 
     this._draw_plant(c, ctx, c.width , c.height, m, s);
     this._draw_leaf(c, ctx, m, s, l1, l2, frame);
-    //this._draw_leaf(c, ctx, m, s, l1, l2);
-    //this._draw_leaf(c, ctx, m, s, l1, l2);
+
 }
 
 Plant.prototype.render = function(ctx, frame) {
