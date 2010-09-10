@@ -242,8 +242,12 @@ Fish.prototype._de = function(c, ctx, b, offset) {
 	ctx.fill();
 };
 Fish.prototype._draw_glow = function(c, ctx, b, frame) {
-	ctx.globalCompositeOperation = 'destination-over';
-	Utility.glow(ctx, 30, 'rgba(255,255,255,0.35)');		
+	ctx.globalCompositeOperation = 'source-over';
+    ctx.globalCompositeOperation = 'destination-over';
+	//Utility.glow(ctx, 30, 'rgba(255,255,255,0.35)');
+    Utility.glow(ctx, 10, 'rgba(0,0,0,0.2)');
+    ctx.shadowOffsetX = 7;  
+    ctx.shadowOffsetY = 7;
 	this._draw_shape(c, ctx, b, frame);
 	ctx.globalCompositeOperation = 'source-over';
 };
@@ -254,17 +258,18 @@ Fish.prototype.prepare = function(frame) {
 	
 	var c = this.canvas[frame],
 		ctx = c.getContext('2d'),
-		b = this.fingerprint;
+		b = this.fingerprint;   
+        
     if (frame == Fish.frames) {
         this._draw_profile(c, ctx, b, frame);
         this._de(c, ctx, b,c.width/2);
         this._de(c, ctx, b,b.eye.s*2+c.width/2);
     } else {
         this._draw_shape(c, ctx, b, frame);
-        if (ctx.globalCompositeOperation) this._draw_scales(c, ctx, b);
-        if (ctx.globalCompositeOperation) this._draw_colors(c, ctx, b);	
-        if (ctx.globalCompositeOperation) this._draw_glow(c, ctx, b, frame);
-        if (ctx.globalCompositeOperation) this._draw_fins(c, ctx, b, frame);
+        this._draw_scales(c, ctx, b);
+        this._draw_colors(c, ctx, b);
+        this._draw_glow(c, ctx, b, frame);
+        this._draw_fins(c, ctx, b, frame);
         this._de(c, ctx, b,0);
     }
 };
