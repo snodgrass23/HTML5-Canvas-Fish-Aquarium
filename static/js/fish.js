@@ -246,7 +246,7 @@ Fish.prototype._draw_glow = function(c, ctx, b, frame) {
     ctx.globalCompositeOperation = 'destination-over';
 	//Utility.glow(ctx, 30, 'rgba(255,255,255,0.35)');
     Utility.glow(ctx, 10, 'rgba(0,0,0,0.2)');
-    ctx.shadowOffsetX = 7;  
+    ctx.shadowOffsetX = 1;  
     ctx.shadowOffsetY = 7;
 	this._draw_shape(c, ctx, b, frame);
 	ctx.globalCompositeOperation = 'source-over';
