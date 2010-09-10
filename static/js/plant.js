@@ -18,7 +18,7 @@
 	
 	Plant.all.push(this);
 }
-Plant.frames = 40;
+Plant.frames = 26;
 Plant.all = [];
 
 
@@ -98,12 +98,12 @@ Plant.prototype._draw_leaf = function(c, ctx, m, s, l1, l2, frame)	{
 	var framerev = frame;
 
 	//if (frame % 2 == 0){
-	   if (frame<20)	{
+	   if (frame<13)	{
 		framerev = frame;
 
 	   }
 	   else	{
-		framerev = 40-frame;
+		framerev = 26-frame;
 
 	   }
 	//}
