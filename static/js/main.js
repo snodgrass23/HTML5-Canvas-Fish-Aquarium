@@ -6,13 +6,6 @@ var addFish = 1;
 function main() {
 	view.clear();
     for (var i in Water.all) Water.all[i].render(view.ctx);
-   
-    for (var i in Fish.all) {
-        if (Fish.all[i].z == 1) {
-        	if(all_stopped > 0) Fish.all[i].render(view.ctx, Fish.frames);
-        	else Fish.all[i].render(view.ctx, frame);	
-        }
-    }
     
     for (var i in Plant.all) 
     	if(Plant.all[i].z == 1) Plant.all[i].render(view.ctx, pframe);
@@ -20,7 +13,7 @@ function main() {
     for (var i in Bubbles.all) Bubbles.all[i].render(view.ctx);
     
     for (var i in Fish.all) {
-        if (Fish.all[i].z == 2) {
+        if (Fish.all[i].z == 2 || true) {
         	if(all_stopped > 0) Fish.all[i].render(view.ctx, Fish.frames);
         	else Fish.all[i].render(view.ctx, frame);	
         }
@@ -28,13 +21,6 @@ function main() {
     
     for (var i in Plant.all) 
     	if(Plant.all[i].z == 2) Plant.all[i].render(view.ctx, pframe);
-    
-    for (var i in Fish.all) {
-        if (Fish.all[i].z == 3) {
-        	if(all_stopped > 0) Fish.all[i].render(view.ctx, Fish.frames);
-        	else Fish.all[i].render(view.ctx, frame);	
-        }
-    }	
     	
     aquarium.render(view.ctx);
     if (all_stopped > 0) all_stopped++
