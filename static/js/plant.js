@@ -2,7 +2,7 @@
 	//this.canvas = document.createElement('canvas');
 	//this.canvas.width = view.canvas.width;
 	//this.canvas.height = view.canvas.height;
-	this.x = ~~Utility.rand(15,view.canvas.width-15);
+	this.x = ~~Utility.rand(35,view.canvas.width-35);
 	this.y = ~~Utility.rand(view.canvas.height-100,view.canvas.height-150);
 	this.z = ~~Utility.rand(1, 2.9);
 	this.h = view.canvas.height;
@@ -67,10 +67,17 @@ Plant.prototype._fingerprint = function(h) {
 
 Plant.prototype._draw_plant = function(c, ctx, w, h, m, s) {
 		 
-            
+       
+ 	ctx.shadowOffsetX = 2;  
+	ctx.shadowOffsetY = 2;  
+	ctx.shadowBlur = 8;  
+	ctx.shadowColor = "#365B31";
+	
 	ctx.strokeStyle = "#0A520A";
-	var lineCap = 'round'; 
+	var lineCap = 'round';
+	ctx.lineCap = lineCap;
 	ctx.lineWidth = s.stemThickness ;
+		
 	ctx.beginPath();
 	
 	ctx.moveTo(m.xpos,m.bottom);
