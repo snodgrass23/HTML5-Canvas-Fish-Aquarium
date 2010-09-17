@@ -3,7 +3,7 @@ function main() {
     view.clear();
     
     // render water
-    for (var i in Water.all) Water.all[i].render(view.ctx);
+    //for (var i in Water.all) Water.all[i].render(view.ctx);
     
     // render plants on level 1
     for (var i in Plant.all) 
@@ -54,8 +54,8 @@ aquarium = new Aquarium(view.canvas.width,view.canvas.height);
 aquarium.prepare();
 
 // frames, x offset, y offset, wave height, wave length
-new Water(50, -13, 30, 15, 55);
-new Water(45, -13, 32, 10, 50);
+// new Water(50, -13, 30, 15, 55);
+// new Water(45, -13, 32, 10, 50);
 
 new Plant(1);
 new Plant(1);

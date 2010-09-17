@@ -1,32 +1,27 @@
 html {
-    background:transparent url(../img/wall.jpg) repeat-x;
+    /*background:transparent url(../img/wall.jpg) repeat-x;*/
 }
 body {
-    margin: 10px auto;
-    background: transparent;
-    width:1040px;
+    margin: 0px;
+    padding: 0px;
+    
     color:#333;
     font-family: 'Reenie Beanie', arial, serif;
     font-size:14px;
     text-align:center;
 }
 #container {
-    background:transparent;
     position:relative;
-    margin:10px;
-    padding:10px;
+    background: #8fd2f3;
+    /*width:100%;*/
+    /*height:100%;*/
+    overflow:hidden;
+    /*margin:10px;*/
+    /*padding:10px;*/
 }
 #tank {
     background:transparent;
-    height:600px;
     position:relative;
-    margin-top:65px;
-    -moz-box-shadow:2px 5px 10px #333;
-    -webkit-box-shadow:2px 5px 10px #333;
-    -moz-transform: rotate(-1deg);
-    -moz-transform-origin: 0% 0%;
-    -webkit-transform:rotate(-1deg);
-    -webkit-transform-origin: 0% 0%;
 }
 #tank h1 {
     font-size:36px;
